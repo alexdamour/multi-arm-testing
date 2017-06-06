@@ -9,12 +9,14 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Preliminary Work
 ```{r cars}
 setwd("/Users/lxh/Desktop/MultiArmTestWorkingDirectory")
 source("PvalueFunction.R")
 source("RatioPower.R")
 ```
 
+# Set Variables
 ```{r}
 N = 10000
 K = 10
@@ -22,92 +24,228 @@ K = 10
 Y = rep(0, K) 
 Y[2] = 1  # sparese treament with 1 level effect
 
-ratio_power(Y, 0.1, 0.1, N, K, compute_pcombine, compute_power)
-
+n_r1 = 20
+n_rk = 100
 ```
 
+# Homoscedasticity
 ```{r}
 start.time = Sys.time()
 
-power_matrix = matrix(0, ncol = 100, nrow = 100) 
-for (j in 1:100){ # Row
-  for (i in 1:100){ # Column
-    power_matrix[i,j] = ratio_power(Y, i*0.02, j*0.1, N, K, compute_pcombine, compute_power) 
-  }
-}
+power_homo = power_ratio_test(Y, N, K, n_r1, n_rk)
+
+power_matrix_homo = power_homo$power_matrix
+r1_homo = power_homo$r1
+rk_homo = power_homo$rk
+
+filled.contour(r1_homo, rk_homo, power_matrix_homo, 
+               color.palette = colorRampPalette(
+                 c("blue", "green", "yellow","orange", "red")),
+               xlab="y1/sig1 ratio",ylab="sigk/sig1 ratio",
+               main="Power given homoskedastic sigma",
+               key.title = title(main="Power"))
+
+
 end.time = Sys.time()
 time.taken1 = end.time - start.time
 time.taken1
 ```
 
-```{r}
-x =0.02 * 1:nrow(power_matrix)
-y =0.1 * 1:ncol(power_matrix)
-filled.contour(x, y, power_matrix, 
-               color.palette = colorRampPalette(
-                 c("blue", "green", "yellow","orange", "red")),
-               xlab="y1/sig1 ratio",ylab="sigk/sig1 ratio",
-               main="The Power of Ratio",
-               key.title = title(main="Power"))
-
-```
 
 
+#Hetero 
 ```{r}
 start.time = Sys.time()
 
-power_matrix_hetero = matrix(0, nrow = 20, ncol = 100) 
-for (j in 1:100){ # Column
-  for (i in 1:20){ # Row
-    power_matrix_hetero[i,j] = ratio_power(Y, i*0.1, j*0.1, N, K, compute_pcombine, compute_power, ktype = "normal", knum =50) 
-  }
-}
+power_hetero_sigln = power_ratio_test(Y, N, K, n_r1, n_rk, ktype = "sig-hetero", knum = 50)
+
+power_matrix_hetero_sigln= power_hetero_sigln$power_matrix
+r1_hetero = power_hetero_sigln$r1
+rk_hetero = power_hetero_sigln$rk
+
+filled.contour(r1_hetero, rk_hetero, power_matrix_hetero_sigln, 
+               color.palette = colorRampPalette(
+                 c("blue", "green", "yellow","orange", "red")),
+               xlab="y1/sig1 ratio",ylab="sigk/sig1 ratio",
+               main="Power given log normally distributed sigma",
+               key.title = title(main="Power"))
+
+
 end.time = Sys.time()
-time.taken2 = end.time - start.time
-time.taken2
+time.taken_hetero = end.time - start.time
+time.taken_hetero
 ```
 
-```{r}
-x =0.1 * 1:nrow(power_matrix_hetero)
-y =0.1 * 1:ncol(power_matrix_hetero)
-filled.contour(x, y, power_matrix_hetero, 
-               color.palette = colorRampPalette(
-                 c("blue", "green", "yellow","orange", "red")),
-               xlab="y1/sig1 ratio",ylab="sigk/sig1 ratio",
-               main="The Power of Ratio",
-               key.title = title(main="Power"))
+# Varying ratio k/1 representation and Rk distribution
 
+```{r}
+n_r1 = 20
+n_rk = 50
 ```
 
-## Minimal Case
-```{r}
-mean = 10
-sig_min = NULL
-sig_general = matrix(0, ncol = K-1 , nrow = 100)
-for (j in 1:100){
-  sig_combine = sig_stat_gen(j*0.01,K, type = "min")
-  if (sig_combine$item %in% sig_min){
-    }else{
-  sig_min[j] = sig_combine$item
-  sig_general[j,] = sig_combine$sigk_rest
-  }
-}
 
+# Min & Uniform
+```{r}
+n_r1 = 20
+n_rk = 50
 start.time = Sys.time()
-Lk = length(sig_min)
-power_matrix_min = matrix(0, nrow = 20, ncol = Lk) 
-for (j in 1:Lk){ # Column
-  sig_general_j = sig_general[j,]
-  for (i in 1:20){ # Row
-    power_matrix_min[i,j] = ratio_power(Y, i*0.1, sig_min[j], N, K, compute_pcombine, compute_power, ktype = "min", sig_general = sig_general_j) 
+power_matrix_min_uni = matrix(0, nrow = n_r1, ncol = n_rk) 
+rk_item = NULL
+for (j in 1:n_rk){ # Column
+  statis = sig_stat_gen(j*0.1, K, ratio_type = "min", sig_type = "uniform")
+  rk = statis$rk
+  rk_item[j] = statis$rk_item 
+  for (i in 1:n_r1){ # Row
+    power_matrix_min_uni[i,j] = ratio_power(Y, i*0.1, rk, N, K, compute_pcombine, compute_power, knum = 50, ktype = "hetero")
   }
 }
 end.time = Sys.time()
 time.taken_min = end.time - start.time
 time.taken_min
+```
+
+```{r}
+power_matrix_min_uni = rbind(power_matrix_min_uni, rk_item)
+power_matrix_min_uni = power_matrix_min_uni[,order(power_matrix_min_uni[n_r1 + 1,])]
+x =0.1 * 1:(nrow(power_matrix_min_uni)-1)
+y = 0.2 * sort(rk_item)
+filled.contour(x, y, power_matrix_min_uni[1:n_r1,], 
+               color.palette = colorRampPalette(
+                 c("blue", "green", "yellow","orange", "red")),
+               xlab="y1/sig1 ratio",ylab="sigk/sig1 ratio",
+               main="The Power of Ratio",
+               key.title = title(main="Power"))
+```
+
+
+# Min & Log-Normal
+```{r}
+n_r1 = 20
+n_rk = 50
+start.time = Sys.time()
+power_matrix_min_ln = matrix(0, nrow = n_r1, ncol = n_rk) 
+rk_item = NULL
+for (j in 1:n_rk){ # Column
+  statis = sig_stat_gen( j*0.1, K, ratio_type = "min", sig_type = "log-normal")
+  rk = statis$rk
+  rk_item[j] = statis$rk_item 
+  for (i in 1:n_r1){ # Row
+    power_matrix_min_ln[i,j] = ratio_power(Y, i*0.1, rk, N, K, compute_pcombine, compute_power, knum = 50, ktype = "hetero")
+  }
+}
+end.time = Sys.time()
+time.taken_min_ln = end.time - start.time
+time.taken_min_ln
+```
+
+```{r}
+power_matrix_min_ln = rbind(power_matrix_min_ln, rk_item)
+power_matrix_min_ln = power_matrix_min_ln[,order(power_matrix_min_ln[n_r1 + 1,])]
+x =0.1 * 1:(nrow(power_matrix_min_ln)-1)
+y = 0.2 * sort(rk_item)
+filled.contour(x, y, power_matrix_min_ln[1:n_r1,], 
+               color.palette = colorRampPalette(
+                 c("blue", "green", "yellow","orange", "red")),
+               xlab="y1/sig1 ratio",ylab="sigk/sig1 ratio",
+               main="The Power of Ratio",
+               key.title = title(main="Power"))
+```
+
+
+# Max & Log-Normal
+```{r}
+n_r1 = 20
+n_rk = 50
+start.time = Sys.time()
+power_matrix_max_ln = matrix(0, nrow = n_r1, ncol = n_rk) 
+rk_item = NULL
+for (j in 1:n_rk){ # Column
+  statis = sig_stat_gen( j*0.1, K, ratio_type = "max", sig_type = "log-normal")
+  rk = statis$rk
+  rk_item[j] = statis$rk_item 
+  for (i in 1:n_r1){ # Row
+    power_matrix_max_ln[i,j] = ratio_power(Y, i*0.1, rk, N, K, compute_pcombine, compute_power, knum = 50, ktype = "hetero")
+  }
+}
+
+
+
+end.time = Sys.time()
+time.taken_min = end.time - start.time
+time.taken_min
+
+```
+
+```{r}
+power_matrix_max_ln = rbind(power_matrix_max_ln, rk_item)
+power_matrix_max_ln = power_matrix_max_ln[,order(power_matrix_max_ln[n_r1 + 1,])]
+x =0.1 * 1:(nrow(power_matrix_max_ln)-1)
+y = 0.2 * sort(rk_item)
+filled.contour(x, y, power_matrix_max_ln[1:n_r1,], 
+               color.palette = colorRampPalette(
+                 c("blue", "green", "yellow","orange", "red")),
+               xlab="y1/sig1 ratio",ylab="sigk/sig1 ratio",
+               main="The Power of Ratio",
+               key.title = title(main="Power"))
+```
+
+
+# Median & Log-Normal
+```{r}
+start.time = Sys.time()
+
+power_ln_med = power_ratio_test(Y, N, K, n_r1, n_rk, ktype = "rk-hetero", ratio_type = "median", sig_type = "log-normal")
+
+power_matrix_ln_med = power_ln_med$power_matrix
+r1_ln_med = power_ln_med$r1
+rk_ln_med = sort(power_ln_med$rk)
+
+
+
+# Plot the power matrix
+filled.contour(r1_ln_med, rk_ln_med, power_matrix_ln_med, 
+               color.palette = colorRampPalette(
+                 c("blue", "green", "yellow","orange", "red")),
+               xlab="y1/sig1 ratio",ylab="sigk/sig1 ratio",
+               main="Power given log-normal rk dist & median ratio",
+               key.title = title(main="Power"))
+
+end.time = Sys.time()
+time.taken_med_ln = end.time - start.time
+time.taken_med_ln
 
 
 ```
+
+
+# Median & Log-Normal
+```{r}
+start.time = Sys.time()
+
+power_ln_mean = power_ratio_test(Y, N, K, n_r1, n_rk, ktype = "rk-hetero", ratio_type = "mean", sig_type = "log-normal")
+
+power_matrix_ln_mean = power_ln_mean$power_matrix
+r1_ln_mean = power_ln_mean$r1
+rk_ln_mean = power_ln_mean$rk
+
+filled.contour(r1_ln_med, rk_ln_med, power_matrix_ln_med, 
+               color.palette = colorRampPalette(
+                 c("blue", "green", "yellow","orange", "red")),
+               xlab="y1/sig1 ratio",ylab="sigk/sig1 ratio",
+               main="Power given log-normal rk dist & mean ratio",
+               key.title = title(main="Power"))
+
+
+end.time = Sys.time()
+time.taken_ln_mean = end.time - start.time
+time.taken_ln_mean
+```
+
+
+
+
+
+
 
 
 
