@@ -1,0 +1,113 @@
+---
+title: "RatioPowerAnalysis"
+author: "Xiaohui Li Yuxin Ma"
+date: "5/31/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r cars}
+setwd("/Users/lxh/Desktop/MultiArmTestWorkingDirectory")
+source("PvalueFunction.R")
+source("RatioPower.R")
+```
+
+```{r}
+N = 10000
+K = 10
+# derive the given Y mean array 
+Y = rep(0, K) 
+Y[2] = 1  # sparese treament with 1 level effect
+
+ratio_power(Y, 0.1, 0.1, N, K, compute_pcombine, compute_power)
+
+```
+
+```{r}
+start.time = Sys.time()
+
+power_matrix = matrix(0, ncol = 100, nrow = 100) 
+for (j in 1:100){ # Row
+  for (i in 1:100){ # Column
+    power_matrix[i,j] = ratio_power(Y, i*0.02, j*0.1, N, K, compute_pcombine, compute_power) 
+  }
+}
+end.time = Sys.time()
+time.taken1 = end.time - start.time
+time.taken1
+```
+
+```{r}
+x =0.02 * 1:nrow(power_matrix)
+y =0.1 * 1:ncol(power_matrix)
+filled.contour(x, y, power_matrix, 
+               color.palette = colorRampPalette(
+                 c("blue", "green", "yellow","orange", "red")),
+               xlab="y1/sig1 ratio",ylab="sigk/sig1 ratio",
+               main="The Power of Ratio",
+               key.title = title(main="Power"))
+
+```
+
+
+```{r}
+start.time = Sys.time()
+
+power_matrix_hetero = matrix(0, nrow = 20, ncol = 100) 
+for (j in 1:100){ # Column
+  for (i in 1:20){ # Row
+    power_matrix_hetero[i,j] = ratio_power(Y, i*0.1, j*0.1, N, K, compute_pcombine, compute_power, ktype = "normal", knum =50) 
+  }
+}
+end.time = Sys.time()
+time.taken2 = end.time - start.time
+time.taken2
+```
+
+```{r}
+x =0.1 * 1:nrow(power_matrix_hetero)
+y =0.1 * 1:ncol(power_matrix_hetero)
+filled.contour(x, y, power_matrix_hetero, 
+               color.palette = colorRampPalette(
+                 c("blue", "green", "yellow","orange", "red")),
+               xlab="y1/sig1 ratio",ylab="sigk/sig1 ratio",
+               main="The Power of Ratio",
+               key.title = title(main="Power"))
+
+```
+
+## Minimal Case
+```{r}
+mean = 10
+sig_min = NULL
+sig_general = matrix(0, ncol = K-1 , nrow = 100)
+for (j in 1:100){
+  sig_combine = sig_stat_gen(j*0.01,K, type = "min")
+  if (sig_combine$item %in% sig_min){
+    }else{
+  sig_min[j] = sig_combine$item
+  sig_general[j,] = sig_combine$sigk_rest
+  }
+}
+
+start.time = Sys.time()
+Lk = length(sig_min)
+power_matrix_min = matrix(0, nrow = 20, ncol = Lk) 
+for (j in 1:Lk){ # Column
+  sig_general_j = sig_general[j,]
+  for (i in 1:20){ # Row
+    power_matrix_min[i,j] = ratio_power(Y, i*0.1, sig_min[j], N, K, compute_pcombine, compute_power, ktype = "min", sig_general = sig_general_j) 
+  }
+}
+end.time = Sys.time()
+time.taken_min = end.time - start.time
+time.taken_min
+
+
+```
+
+
+
