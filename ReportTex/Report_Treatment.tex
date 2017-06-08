@@ -108,6 +108,8 @@ Test for the critical ratio with $\sqrt{k}$.
 \caption{Critical Ratio for $\sqrt{K}$}
 \end{figure}
 \quad\\
+It shows a clear sigh of linear relationship with $\sqrt{K}$.
+
 \subsection{$\log{K}$}
 Test for the critical ratio with $\log{k}$.
 \begin{figure}[htbp]
@@ -120,11 +122,12 @@ The $\log{K}$ case looks more like a linear relation, indicating $\log{K}$ incre
 \subsection{Regression}
 We further apply the linear regression to compare $\sqrt{K}$ and $\log{K}$ .
 \begin{figure}[htbp]
-\centering\includegraphics[width=4.8in,height=6in]{reg}
+\centering\includegraphics[width=4.8in, height=6in]{reg}
 \caption{Regression Summary}
 \end{figure}
 \quad\\
-Note the $\log{k}$'s $\beta$ coefficient is more statistically significant and larger, while the $r^2$ of log is also larger than $\sqrt{K}$, this supports the reasoning that critical ratio is logarithm increase.
+Note the $\sqrt{K}$ 's $\beta$ coefficient is more statistically significant and larger, while the $r^2$ of log is also larger than $\log{k}$, this supports the reasoning that critical ratio is logarithm increase. In particular, the r squared for  $\sqrt{K}$ model is high as 0.9911, indicating a potential theoritical relationship: 
+
 
 \quad\\
 \quad\\
@@ -133,7 +136,7 @@ Note the $\log{k}$'s $\beta$ coefficient is more statistically significant and l
 
 
 \subsection{Conclusions}
-Treatment size K has a negative effect upon power, and the 80\% power critical ratio logarithm increase with the treatment size K.
+Treatment size K has a negative effect upon power, and the 80\% power critical ratio increase with the treatment size K at the rate of squared K.
 
 
 
