@@ -11,33 +11,45 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Preliminary Work
 ```{r cars}
+# Set directory
 setwd("/Users/lxh/Desktop/MultiArmTestWorkingDirectory")
+# Function of computing p-value
 source("PvalueFunction.R")
+# Function of computing power
 source("RatioPower.R")
 ```
 
 # Set Variables
 ```{r}
-N = 10000
+# Number of units 
+n = 10000
+# Number of treatments
 K = 10
-# derive the given Y mean array 
-Y = rep(0, K) 
-Y[2] = 1  # sparese treament with 1 level effect
-
+# Derive the given Y mean array 
+Y = rep(0, K)
+# Sparse treament with 1 level effect
+Y[2] = 1
+# Number of iteration times of r1
 n_r1 = 20
+# Number of iteration times of rk
 n_rk = 100
 ```
 
 # Homoscedasticity
 ```{r}
+# Compute the running time
 start.time = Sys.time()
 
-power_homo = power_ratio_test(Y, N, K, n_r1, n_rk)
+# Compute the power under the homoscedasticity case
+power_homo = power_ratio_test(Y, n, K, n_r1, n_rk)
 
+# Get the power matrix
 power_matrix_homo = power_homo$power_matrix
+# Get r1
 r1_homo = power_homo$r1
+# Get rk
 rk_homo = power_homo$rk
-
+# Contour Plot
 filled.contour(r1_homo, rk_homo, power_matrix_homo, 
                color.palette = colorRampPalette(
                  c("blue", "green", "yellow","orange", "red")),
@@ -53,11 +65,13 @@ time.taken1
 
 
 
-#Hetero 
+# Heteroscedasticity 
 ```{r}
 start.time = Sys.time()
 
-power_hetero_sigln = power_ratio_test(Y, N, K, n_r1, n_rk, ktype = "sig-hetero", knum = 50)
+power_hetero_sigln = power_ratio_test(Y, n, K, n_r1, n_rk, ktype = "sig-hetero", knum = 50)
+# ktype: the type of generating sigma_k, sig-hetero is directly generating sigma_k under the heteroscedasticity case
+# knum: times of generating sigma_k to make computation more general
 
 power_matrix_hetero_sigln= power_hetero_sigln$power_matrix
 r1_hetero = power_hetero_sigln$r1
@@ -76,7 +90,7 @@ time.taken_hetero = end.time - start.time
 time.taken_hetero
 ```
 
-# Varying ratio k/1 representation and Rk distribution
+# Generate rk by distribution
 
 ```{r}
 n_r1 = 20
@@ -86,107 +100,75 @@ n_rk = 50
 
 # Min & Uniform
 ```{r}
-n_r1 = 20
-n_rk = 50
 start.time = Sys.time()
-power_matrix_min_uni = matrix(0, nrow = n_r1, ncol = n_rk) 
-rk_item = NULL
-for (j in 1:n_rk){ # Column
-  statis = sig_stat_gen(j*0.1, K, ratio_type = "min", sig_type = "uniform")
-  rk = statis$rk
-  rk_item[j] = statis$rk_item 
-  for (i in 1:n_r1){ # Row
-    power_matrix_min_uni[i,j] = ratio_power(Y, i*0.1, rk, N, K, compute_pcombine, compute_power, knum = 50, ktype = "hetero")
-  }
-}
-end.time = Sys.time()
-time.taken_min = end.time - start.time
-time.taken_min
-```
 
-```{r}
-power_matrix_min_uni = rbind(power_matrix_min_uni, rk_item)
-power_matrix_min_uni = power_matrix_min_uni[,order(power_matrix_min_uni[n_r1 + 1,])]
-x =0.1 * 1:(nrow(power_matrix_min_uni)-1)
-y = 0.2 * sort(rk_item)
-filled.contour(x, y, power_matrix_min_uni[1:n_r1,], 
+power_uni_min = power_ratio_test(Y, n, K, n_r1, n_rk, ktype = "rk-hetero", ratio_type = "min", sig_type = "uniform")
+# ktype: the type of generating sigma_k, rk-hetero is directly generating r_k by specific distribution
+# ratio_type: the type of take the specific value of rk to plot, including minimum, maximum, median and mean
+# sig_type: the type of distribution to generate rk, we take uniform distribution here
+
+power_matrix_uni_min = power_uni_min$power_matrix
+r1_uni_min = power_uni_min$r1
+rk_uni_min = sort(power_uni_min$rk)
+
+filled.contour(r1_uni_min, rk_uni_min, power_matrix_uni_min, 
                color.palette = colorRampPalette(
                  c("blue", "green", "yellow","orange", "red")),
                xlab="y1/sig1 ratio",ylab="sigk/sig1 ratio",
-               main="The Power of Ratio",
+               main="Power given uniform rk dist & min ratio",
                key.title = title(main="Power"))
+
+end.time = Sys.time()
+time.taken_min = end.time - start.time
+time.taken_min
 ```
 
 
 # Min & Log-Normal
 ```{r}
-n_r1 = 20
-n_rk = 50
 start.time = Sys.time()
-power_matrix_min_ln = matrix(0, nrow = n_r1, ncol = n_rk) 
-rk_item = NULL
-for (j in 1:n_rk){ # Column
-  statis = sig_stat_gen( j*0.1, K, ratio_type = "min", sig_type = "log-normal")
-  rk = statis$rk
-  rk_item[j] = statis$rk_item 
-  for (i in 1:n_r1){ # Row
-    power_matrix_min_ln[i,j] = ratio_power(Y, i*0.1, rk, N, K, compute_pcombine, compute_power, knum = 50, ktype = "hetero")
-  }
-}
-end.time = Sys.time()
-time.taken_min_ln = end.time - start.time
-time.taken_min_ln
-```
 
-```{r}
-power_matrix_min_ln = rbind(power_matrix_min_ln, rk_item)
-power_matrix_min_ln = power_matrix_min_ln[,order(power_matrix_min_ln[n_r1 + 1,])]
-x =0.1 * 1:(nrow(power_matrix_min_ln)-1)
-y = 0.2 * sort(rk_item)
-filled.contour(x, y, power_matrix_min_ln[1:n_r1,], 
+power_ln_min = power_ratio_test(Y, n, K, n_r1, n_rk, ktype = "rk-hetero", ratio_type = "min", sig_type = "log-normal")
+# We take log-normal distribution here and use the minimum of rk to make the contour plot
+
+power_matrix_ln_min = power_ln_min$power_matrix
+r1_ln_min = power_ln_min$r1
+rk_ln_min = sort(power_ln_min$rk)
+
+filled.contour(r1_ln_min, rk_ln_min, power_matrix_ln_min, 
                color.palette = colorRampPalette(
                  c("blue", "green", "yellow","orange", "red")),
                xlab="y1/sig1 ratio",ylab="sigk/sig1 ratio",
-               main="The Power of Ratio",
+               main="Power given log-normal rk dist & min ratio",
                key.title = title(main="Power"))
+
+end.time = Sys.time()
+time.taken_min = end.time - start.time
+time.taken_min
 ```
 
 
 # Max & Log-Normal
 ```{r}
-n_r1 = 20
-n_rk = 50
 start.time = Sys.time()
-power_matrix_max_ln = matrix(0, nrow = n_r1, ncol = n_rk) 
-rk_item = NULL
-for (j in 1:n_rk){ # Column
-  statis = sig_stat_gen( j*0.1, K, ratio_type = "max", sig_type = "log-normal")
-  rk = statis$rk
-  rk_item[j] = statis$rk_item 
-  for (i in 1:n_r1){ # Row
-    power_matrix_max_ln[i,j] = ratio_power(Y, i*0.1, rk, N, K, compute_pcombine, compute_power, knum = 50, ktype = "hetero")
-  }
-}
 
+power_ln_max = power_ratio_test(Y, n, K, n_r1, n_rk, ktype = "rk-hetero", ratio_type = "max", sig_type = "log-normal")
+# We take log-normal distribution here and use the maximum of rk to make the contour plot
 
+power_matrix_ln_max = power_ln_max$power_matrix
+r1_ln_max = power_ln_max$r1
+rk_ln_max = sort(power_ln_max$rk)
+
+filled.contour(r1_ln_max, rk_ln_max, power_matrix_ln_max, 
+               color.palette = colorRampPalette(
+                 c("blue", "green", "yellow","orange", "red")),
+               xlab="y1/sig1 ratio",ylab="sigk/sig1 ratio",
+               main="Power given log-normal rk dist & max ratio",
+               key.title = title(main="Power"))
 
 end.time = Sys.time()
 time.taken_min = end.time - start.time
 time.taken_min
-
-```
-
-```{r}
-power_matrix_max_ln = rbind(power_matrix_max_ln, rk_item)
-power_matrix_max_ln = power_matrix_max_ln[,order(power_matrix_max_ln[n_r1 + 1,])]
-x =0.1 * 1:(nrow(power_matrix_max_ln)-1)
-y = 0.2 * sort(rk_item)
-filled.contour(x, y, power_matrix_max_ln[1:n_r1,], 
-               color.palette = colorRampPalette(
-                 c("blue", "green", "yellow","orange", "red")),
-               xlab="y1/sig1 ratio",ylab="sigk/sig1 ratio",
-               main="The Power of Ratio",
-               key.title = title(main="Power"))
 ```
 
 
@@ -194,7 +176,8 @@ filled.contour(x, y, power_matrix_max_ln[1:n_r1,],
 ```{r}
 start.time = Sys.time()
 
-power_ln_med = power_ratio_test(Y, N, K, n_r1, n_rk, ktype = "rk-hetero", ratio_type = "median", sig_type = "log-normal")
+power_ln_med = power_ratio_test(Y, n, K, n_r1, n_rk, ktype = "rk-hetero", ratio_type = "median", sig_type = "log-normal")
+# We take log-normal distribution here and use the median of rk to make the contour plot
 
 power_matrix_ln_med = power_ln_med$power_matrix
 r1_ln_med = power_ln_med$r1
@@ -218,17 +201,18 @@ time.taken_med_ln
 ```
 
 
-# Median & Log-Normal
+# Mean & Log-Normal
 ```{r}
 start.time = Sys.time()
 
-power_ln_mean = power_ratio_test(Y, N, K, n_r1, n_rk, ktype = "rk-hetero", ratio_type = "mean", sig_type = "log-normal")
+power_ln_mean = power_ratio_test(Y, n, K, n_r1, n_rk, ktype = "rk-hetero", ratio_type = "mean", sig_type = "log-normal")
+# We take log-normal distribution here and use the mean of rk to make the contour plot
 
 power_matrix_ln_mean = power_ln_mean$power_matrix
 r1_ln_mean = power_ln_mean$r1
 rk_ln_mean = power_ln_mean$rk
 
-filled.contour(r1_ln_med, rk_ln_med, power_matrix_ln_med, 
+filled.contour(r1_ln_mean, rk_ln_mean, power_matrix_ln_mean, 
                color.palette = colorRampPalette(
                  c("blue", "green", "yellow","orange", "red")),
                xlab="y1/sig1 ratio",ylab="sigk/sig1 ratio",
