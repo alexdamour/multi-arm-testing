@@ -1,7 +1,7 @@
 #Fundamental Simulation Function
 ##Generate p-value function
 compute_pvalue = function(Yk, sigk, N, K){
-  n <- floor(N/K)
+  n <- N/K
   nk = rep(n, K) # assume evenly distributed number of subgroups nk
   # initialize the parameters
   tao = NULL # causal estimand
@@ -32,7 +32,7 @@ compute_pvalue = function(Yk, sigk, N, K){
 
 ##Generate p-combine function
 compute_pcombine <- function(Yk, sigk, N, K){
-  n <- floor(N/K)
+  n <- N/K
   p_comb_val <- NULL
   pmatrix <- compute_pvalue(Yk, sigk, N, K)
   for (k in 1:n){
@@ -44,7 +44,7 @@ compute_pcombine <- function(Yk, sigk, N, K){
 
 ##Generate power function
 compute_power <- function(Yk, sigk, N, K, p_cv){
-  n <- floor(N/K)
+  n <- N/K
   power = 0
   pcomb = compute_pcombine(Yk, sigk, N, K)
   rejec = 0
@@ -79,7 +79,7 @@ compute_ctratio = function(Y, N, K, r1_start = 0.01, r1_step =0.001, r1_ceil = 1
 }
 
 ##Binary critical ratio calculation
-compute_binary_ctratio = function(Y, N, K, delta, r1_start = 0, r1_step =0.1, r1_ceil = 1, rk = 1){
+compute_binary_ctratio = function(Y, N, K, delta, r1_start = 0, r1_step = 0.15, r1_ceil = 1, rk = 1){
   critical = (r1_start + r1_ceil)/2
   
   power = ratio_power(Y, critical, rk, N, K, compute_pcombine, compute_power)
@@ -93,6 +93,11 @@ compute_binary_ctratio = function(Y, N, K, delta, r1_start = 0, r1_step =0.1, r1
     print(diff)
     print(power)
     print(critical)
+    if (r1_start == r1_ceil ){
+      ## avoid infinite loop case, reduce the floor r1_start
+    critical = r1_start/2
+    return(compute_binary_ctratio(Y, N, K, delta = delta, r1_start = critical, r1_step = r1_step, r1_ceil = r1_ceil, rk = rk))
+    }else{
     if (power > power_ahead | power < 0.8 ){
       return(compute_binary_ctratio(Y, N, K, delta = delta, r1_start = critical, r1_step = r1_step, r1_ceil = r1_ceil, rk = rk))
     }else{
@@ -100,6 +105,7 @@ compute_binary_ctratio = function(Y, N, K, delta, r1_start = 0, r1_step =0.1, r1
         return(compute_binary_ctratio(Y, N, K, delta = delta, r1_start = r1_start, r1_step = r1_step, r1_ceil = critical, rk = rk))
       }else{
         print("Error: does not exists")
+        }
       }   
     }
   }  

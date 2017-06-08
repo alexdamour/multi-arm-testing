@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2016.1.28)  6 JUN 2017 03:50
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2016.1.28)  8 JUN 2017 00:02
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -347,11 +347,11 @@ Underfull \hbox (badness 10000) in paragraph at lines 81--86
 
  []
 
-<100.jpeg, id=24, 2613.765pt x 1614.03pt>
+<100.jpeg, id=24, 2621.795pt x 1620.0525pt>
 File: 100.jpeg Graphic file (type jpg)
  <use 100.jpeg>
 Package pdftex.def Info: 100.jpeg used on input line 88.
-(pdftex.def)             Requested size: 346.86063pt x 227.63737pt.
+(pdftex.def)             Requested size: 346.88612pt x 227.64629pt.
 
 Underfull \hbox (badness 10000) in paragraph at lines 94--104
 
@@ -402,39 +402,35 @@ Underfull \hbox (badness 10000) in paragraph at lines 94--104
 
  []
 
-<sqrt.jpeg, id=25, 2613.765pt x 1614.03pt>
+<sqrt.jpeg, id=25, 2621.795pt x 1620.0525pt>
 File: sqrt.jpeg Graphic file (type jpg)
  <use sqrt.jpeg>
 Package pdftex.def Info: sqrt.jpeg used on input line 107.
-(pdftex.def)             Requested size: 325.20428pt x 227.63737pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 105--111
-
- []
-
-[3 <./100.jpeg>] <log.jpg, id=29, 2613.765pt x 1614.03pt>
+(pdftex.def)             Requested size: 325.20323pt x 227.64629pt.
+ [3 <./100.jpeg>]
+<log.jpg, id=29, 2613.765pt x 1614.03pt>
 File: log.jpg Graphic file (type jpg)
  <use log.jpg>
-Package pdftex.def Info: log.jpg used on input line 114.
+Package pdftex.def Info: log.jpg used on input line 116.
 (pdftex.def)             Requested size: 346.86063pt x 227.63737pt.
 
-<reg.png, id=30, 486.81876pt x 632.3625pt>
+<reg.png, id=30, 485.815pt x 677.53125pt>
 File: reg.png Graphic file (type png)
  <use reg.png>
-Package pdftex.def Info: reg.png used on input line 123.
-(pdftex.def)             Requested size: 346.89911pt x 433.62886pt.
+Package pdftex.def Info: reg.png used on input line 125.
+(pdftex.def)             Requested size: 346.8955pt x 433.62885pt.
  [4 <./sqrt.jpeg> <./log.jpg>]
-Underfull \hbox (badness 10000) in paragraph at lines 129--132
+Underfull \hbox (badness 10000) in paragraph at lines 132--135
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 129--132
+Underfull \hbox (badness 10000) in paragraph at lines 132--135
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 129--132
+Underfull \hbox (badness 10000) in paragraph at lines 132--135
 
  []
 
@@ -462,7 +458,7 @@ m-super/sfbx1440.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/cm-
 super/sfrm1000.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/cm-su
 per/sfrm1200.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/cm-supe
 r/sfrm1728.pfb>
-Output written on Report_Treatment.pdf (5 pages, 1369711 bytes).
+Output written on Report_Treatment.pdf (5 pages, 1353638 bytes).
 PDF statistics:
  82 PDF objects out of 1000 (max. 8388607)
  53 compressed objects within 1 object stream
