@@ -70,7 +70,7 @@ power = ratio_power(Y, r1_critical, rk, n, K, compute_pcombine, compute_power)
     r1_start = r1_start + r1_step
     power_ahead = ratio_power(Y, r1_start, rk, n, K, compute_pcombine, compute_power)
     if (power < 0.8 | power >= power_ahead){
-      return(compute_ctratio(Y, N, K, r1_start = r1_start, r1_step = r1_step, r1_ceil = r1_ceil, rk = rk))
+      return(compute_ctratio(Y, n, K, r1_start = r1_start, r1_step = r1_step, r1_ceil = r1_ceil, rk = rk))
     }else{
     return (r1_critical)  
     } 

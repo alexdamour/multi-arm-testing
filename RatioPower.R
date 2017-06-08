@@ -107,7 +107,7 @@ power_ratio_test = function(Y, n, K, n_r1, n_rk, ktype = "homo", knum = 1, ratio
               rk_item_exp[e] = statis_exp$rk_item 
               # get the corresponding power
               rk_exp = statis_exp$rk
-              power_exp[e] = ratio_power(Y, r1_i, rk_exp, N, K, compute_pcombine, compute_power, ktype = ktype, knum = knum)}
+              power_exp[e] = ratio_power(Y, r1_i, rk_exp, n, K, compute_pcombine, compute_power, ktype = ktype, knum = knum)}
           
             # get the mean of rk_item and power for repeated experiments
             rk_item[j] = mean(rk_item_exp)  
