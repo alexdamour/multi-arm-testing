@@ -1,0 +1,84 @@
+---
+title: "Testing"
+author: "Yuxin"
+date: "6/7/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(Iso)
+```
+
+# Isotonic Regression
+```{r}
+x <- seq(0.01,1,0.01)
+iso1 <- ufit(power_10, x1, type = "b")
+iso2 <- ufit(power_50, x1, type = "b")
+iso3 <- ufit(power_100, x1, type = "b")
+plot(x1, power_10, type = "l", xlab = "r1_value", ylab = "power", main = "Isotonic Regression Plot")
+lines(x, power_50)
+lines(x, power_100)
+lines(iso1, col="red")
+lines(iso2, col="red")
+lines(iso3, col="red")
+```
+
+# Scaling
+```{r}
+# Compute the running time
+start.time = Sys.time()
+
+N <- 10000
+K <- 10
+Y1 <- rep(0, K)
+Y2 <- rep(0, K)
+Y3 <- rep(0, K)
+Y4 <- rep(0, K)
+d <- 100
+temp1 <- NULL
+temp2 <- NULL
+temp3 <- NULL
+temp4 <- NULL
+for (j in 1:d){
+  Y1[2] <- Y1[2] + 1/d
+  temp1[j] <- ratio_power(Y1, 0.01, 1, N, K, compute_pcombine, compute_power)
+}
+for (j in 1:d){
+  Y2[2] <- Y2[2] + 2/d
+  temp2[j] <- ratio_power(Y2, 0.01, 1, N, K, compute_pcombine, compute_power)
+}
+for (j in 1:d){
+  Y3[2] <- Y3[2] + 1.5/d
+  temp3[j] <- ratio_power(Y3, 0.01, 1, N, K, compute_pcombine, compute_power)
+}
+for (j in 1:d){
+  Y4[2] <- Y4[2] + 1.2/d
+  temp4[j] <- ratio_power(Y4, 0.01, 1, N, K, compute_pcombine, compute_power)
+}
+
+
+plot(seq(0.01,1,0.01), temp1, type = "l", xlab = "Y1_value", ylab = "Power")
+lines(seq(0.02,2,0.02), temp2, type = "l", col = "red")
+lines(seq(0.015,1.5,0.015), temp3, type = "l", col = "blue")
+lines(seq(0.012,1.2,0.012), temp4, type = "l", col = "green")
+
+
+end.time = Sys.time()
+time.taken = end.time - start.time
+time.taken
+```
+
+
+
+
+
+
+
+
+
+
+
