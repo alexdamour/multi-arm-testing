@@ -14,7 +14,7 @@ compute_pvalue = function(Yk, sigk, n, K){
   for (j in 1:n){
     for (i in 1:K){ 
       # derive the sample mean and sample variance 
-      Yob[i] = rnorm(1, Yk[i], sigk[i] * sqrt(n))
+      Yob[i] = rnorm(1, Yk[i], sigk[i] / sqrt(n))
       sig[i] = sigk[i] * rchisq(1, nk[i] - 1) / (nk[i] - 1)
       Y0 = Yob[1] # non-treat mean
       tao[i] = Yob[i] - Y0 
@@ -32,7 +32,7 @@ compute_pvalue = function(Yk, sigk, n, K){
 ##Generate p-combine function
 compute_pcombine <- function(Yk, sigk, n, K){
   p_comb_val <- NULL
-  pmatrix <- compute_pvalue(Yk, sigk, N, K)
+  pmatrix <- compute_pvalue(Yk, sigk, n, K)
   for (k in 1:n){
   p_comb_val[k] = min(pmatrix[k,-1]) #minimum
   }

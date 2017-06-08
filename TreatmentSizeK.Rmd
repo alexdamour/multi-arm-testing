@@ -12,13 +12,13 @@ source("RatioPower.R")
 ```
 
 ```{r}
-N = 10000
+n = 1000
 ```
 
 
 
-# Test the power shape for effective size
-##k = 10 
+# A. Test the power shape for effective size
+## k = 10 
 ```{r}
 K = 10
 Y = rep(0, K)
@@ -27,12 +27,11 @@ power_10 = NULL
 for (j in 1:100){
   Y_j[2] = 0.01 * j
   r1_j = Y_j[2] /1
-  power_10[j] = ratio_power(Y_j, r1_j , 1, N, K, compute_pcombine, compute_power)
-}
-plot(seq(0.01,1,0.01), power_10, type = "l", xlab = "r1_value", ylab ="power ", main = "Power with increasing r1 given K", col = "turquoise" )
-lines(seq(0.01,1,0.01), power_50, col = "blue")
-lines(seq(0.01,1,0.01), power_100, col = "steelblue")
-legend("bottomright", c("K = 10", "K = 50", "K = 100"), col = c("Turquoise","Blue","steelblue"), lty=1)
+  power_10[j] = ratio_power(Y_j, r1_j , 1, n, K, compute_pcombine, compute_power)
+
+  }
+plot(seq(0.01,1,0.01), power_10, type = "l", xlab = "r1_value", ylab ="power ", main = "Power with increasing r1 given K")
+
 ```
 
 ##k = 50
@@ -44,7 +43,7 @@ power_50 = NULL
 for (j in 1:100){
   Y_j[2] = 0.01 * j
   r1_j = Y_j[2] /1
-  power_50[j] = ratio_power(Y_j, r1_j , 1, N, K, compute_pcombine, compute_power)
+  power_50[j] = ratio_power(Y_j, r1_j , 1, n, K, compute_pcombine, compute_power)
 }
 plot(seq(0.01,1,0.01), power_50, type = "l", xlab = "r1_value", main = "Power with effective Y1 given K = 50" )
 
@@ -59,39 +58,49 @@ power_100 = NULL
 for (j in 1:100){
   Y_j[2] = 0.01 * j
   r1_j = Y_j[2] /1
-  power_100[j] = ratio_power(Y_j, r1_j , 1, N, K, compute_pcombine, compute_power)
+  power_100[j] = ratio_power(Y_j, r1_j , 1, n, K, compute_pcombine, compute_power)
 }
 plot(seq(0.01,1,0.01), power_100, type = "l", xlab = "r1_value", main = "Power with effective Y1 given K = 100" )
 ```
 
+## Compare the power pattern given different size K
+```{r}
+plot(seq(0.01,1,0.01), power_10, type = "l", xlab = "r1_value", ylab ="power ", main = "Power with increasing r1 given different K", col = "turquoise" )
+lines(seq(0.01,1,0.01), power_50, col = "blue")
+lines(seq(0.01,1,0.01), power_100, col = "steelblue")
+legend("bottomright", c("K = 10", "K = 50", "K = 100"), col = c("Turquoise","Blue","steelblue"), lty=1)
+```
 
-# Caculate the power with K increasing 
+
+
+
+# B. Caculate the power with K increasing 
 ## r1 = 1
 ```{r}
 power_K = NULL
-for (k in 2:100){
+for (k in 2:201){
   Y_k = rep(0,k)
   Y_k[2] = 1
-  power_K[k] = ratio_power(Y_k , 1 , 1, N, k, compute_pcombine, compute_power)
+  power_K[k] = ratio_power(Y_k , 1 , 1, n, k, compute_pcombine, compute_power)
 }
 
-plot(seq(2,101,1), power_K, type = "l", xlab = "K size", main = "Power with k size given r1 = 1" )
+plot(power_K, type = "l", xlab = "K size", main = "Power with k size given r1 = 1" )
 ```
 
 ## r1 = 2
 ```{r}
 power_K = NULL
-for (k in 2:100){
+for (k in 2:200){
   Y_k = rep(0,k)
   Y_k[2] = 1
-  power_K[k] = ratio_power(Y_k , 0.5 , 1, N, k, compute_pcombine, compute_power)
+  power_K[k] = ratio_power(Y_k , 0.5 , 1, n, k, compute_pcombine, compute_power)
 }
 
-plot(seq(2,101,1), power_K, type = "l", xlab = "K size", main = "Power with k size" )
+plot(seq(2,201,1), power_K, type = "l", xlab = "K size", main = "Power with k size given r1 = 0.5" )
 ```
 
 
-# 80% Power critical ratio for treatment size K
+# C. 80% Power critical ratio for treatment size K
 ```{r}
 start.time = Sys.time()
 
@@ -100,9 +109,7 @@ for (k in 2:5){
   Yk = rep(0,k)
   Yk[2] = 1 
   
-  N_k = 1000 * k
-  
-  critical_ratio[k] = compute_ctratio(Yk, N_k, k)
+  critical_ratio[k] = compute_ctratio(Yk, n, k)
 }
 
 # plot the critical ratio against the k treatments number
@@ -121,8 +128,7 @@ for (k in 2:100){
   Yk = rep(0,k)
   Yk[2] = 1 
   
-  N_k = 1000 * k
-  critical_ratio[k] = compute_binary_ctratio(Yk, N_k, k, 0.005)
+  critical_ratio[k] = compute_binary_ctratio(Yk, n, k, 0.005)
 }
 
 # plot the critical ratio against the k treatments number
@@ -133,6 +139,7 @@ time.taken_binaryctratio = end.time - start.time
 time.taken_binaryctratio
 ```
 
+## Analyze the increasing rate of critical ratio with K - log K and squared K form
 ```{r}
 start.time = Sys.time()
 
