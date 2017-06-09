@@ -207,6 +207,287 @@ time.taken
 
 
 
+# Scaling
+# Scaling
+## 1) fixing r1, check whether simultaneously changing Y1 and sig1 will change the power.
+```{r}
+# Compute the running time
+start.time = Sys.time()
+
+N <- 10000
+K <- 10
+Y1 <- rep(0, K)
+Y2 <- rep(0, K)
+Y3 <- rep(0, K)
+Y4 <- rep(0, K)
+d <- 100
+temp1 <- NULL
+temp2 <- NULL
+temp3 <- NULL
+temp4 <- NULL
+for (j in 1:d){
+  Y1[2] <- Y1[2] + 1/d
+  temp1[j] <- ratio_power(Y1, 0.01, 1, N, K, compute_pcombine, compute_power)
+}
+for (j in 1:d){
+  Y2[2] <- Y2[2] + 2/d
+  temp2[j] <- ratio_power(Y2, 0.01, 1, N, K, compute_pcombine, compute_power)
+}
+for (j in 1:d){
+  Y3[2] <- Y3[2] + 1.5/d
+  temp3[j] <- ratio_power(Y3, 0.01, 1, N, K, compute_pcombine, compute_power)
+}
+for (j in 1:d){
+  Y4[2] <- Y4[2] + 1.2/d
+  temp4[j] <- ratio_power(Y4, 0.01, 1, N, K, compute_pcombine, compute_power)
+}
+
+
+plot(seq(0.01,1,0.01), temp1, type = "l", xlab = "Y1_value", ylab = "Power")
+lines(seq(0.02,2,0.02), temp2, type = "l", col = "red")
+lines(seq(0.015,1.5,0.015), temp3, type = "l", col = "blue")
+lines(seq(0.012,1.2,0.012), temp4, type = "l", col = "green")
+
+
+end.time = Sys.time()
+time.taken = end.time - start.time
+time.taken
+```
+
+## 2) see different scaling Y1 and sigma1's ratio r1 
+```{r}
+N = 10000
+K = 10
+d = 100
+# the scaled effective treatment 
+Y_05 = rep(0, K)
+Y_05[2] = 0.5
+
+Y_1 = rep(0, K)
+Y_1[2] = 1
+
+Y_15 = rep(0, K)
+Y_15[2] = 1.5 
+
+Y_2 = rep(0, K)
+Y_2[2] = 2
+
+Y_25 = rep(0, K)
+Y_25[2] = 2.5
+
+# the respective power
+ratio_05 = NULL
+ratio_1 = NULL
+ratio_15 = NULL
+ratio_2 = NULL
+ratio_25 = NULL
+
+for (i in 1:d){
+  ratio_05[i] = ratio_power(Y_05, i * 1/d, 1, N, K, compute_pcombine, compute_power)
+  ratio_1[i] = ratio_power(Y_1, i * 1/d, 1, N, K, compute_pcombine, compute_power)  
+  ratio_15[i] = ratio_power(Y_15, i * 1/d, 1, N, K, compute_pcombine, compute_power)
+  ratio_2[i] = ratio_power(Y_2, i * 1/d, 1, N, K, compute_pcombine, compute_power)
+  ratio_25[i] = ratio_power(Y_25, i * 1/d, 1, N, K, compute_pcombine, compute_power)
+}
+
+
+plot(seq(1/d, 1, 1/d), ratio_05, type = "l", xlab = "r1_value", ylab = "Power", col = "aquamarine")
+lines(seq(1/d, 1, 1/d), ratio_1, type = "l", col = "turquoise")
+lines(seq(1/d, 1, 1/d), ratio_15, type = "l", col = "cornflowerblue")
+lines(seq(1/d, 1, 1/d), ratio_2, type = "l", col = "deepskyblue")
+lines(seq(1/d, 1, 1/d), ratio_25, type = "l", col = "navyblue")
+
+legend("bottomright", c("Y = 0.5", "Y = 1", "Y = 1.5", "Y = 2", "Y = 2.5"), col = c("aquamarine", "Turquoise", "cornflowerblue", "deepskyblue", "navyblue"), lty=1)
+
+```
+
+
+# Increasing the total number N
+
+```{r}
+# setting the total number to be a hundred thousand
+N = 100000
+K = 10
+d = 100
+# the scaled effective treatment 
+Y_05 = rep(0, K)
+Y_05[2] = 0.5
+
+Y_1 = rep(0, K)
+Y_1[2] = 1
+
+Y_15 = rep(0, K)
+Y_15[2] = 1.5 
+
+Y_2 = rep(0, K)
+Y_2[2] = 2
+
+Y_25 = rep(0, K)
+Y_25[2] = 2.5
+
+# the respective power
+ratio_05 = NULL
+ratio_1 = NULL
+ratio_15 = NULL
+ratio_2 = NULL
+ratio_25 = NULL
+
+for (i in 1:d){
+  ratio_05[i] = ratio_power(Y_05, i * 1/d, 1, N, K, compute_pcombine, compute_power)
+  ratio_1[i] = ratio_power(Y_1, i * 1/d, 1, N, K, compute_pcombine, compute_power)  
+  ratio_15[i] = ratio_power(Y_15, i * 1/d, 1, N, K, compute_pcombine, compute_power)
+  ratio_2[i] = ratio_power(Y_2, i * 1/d, 1, N, K, compute_pcombine, compute_power)
+  ratio_25[i] = ratio_power(Y_25, i * 1/d, 1, N, K, compute_pcombine, compute_power)
+}
+
+
+plot(seq(1/d, 1, 1/d), ratio_05, type = "l", xlab = "r1_value", ylab = "Power", col = "aquamarine", main = "Power pattern with different Yk level given total number N = 100000")
+lines(seq(1/d, 1, 1/d), ratio_1, type = "l", col = "turquoise")
+lines(seq(1/d, 1, 1/d), ratio_15, type = "l", col = "cornflowerblue")
+lines(seq(1/d, 1, 1/d), ratio_2, type = "l", col = "deepskyblue")
+lines(seq(1/d, 1, 1/d), ratio_25, type = "l", col = "navyblue")
+
+legend("bottomright", c("Y = 0.5", "Y = 1", "Y = 1.5", "Y = 2", "Y = 2.5"), col = c("aquamarine", "Turquoise", "cornflowerblue", "deepskyblue", "navyblue"), lty=1)
+```
+
+
+```{r}
+# setting the total number to be a hundred thousand
+N = 1000
+K = 10
+d = 100
+# the scaled effective treatment 
+Y_05 = rep(0, K)
+Y_05[2] = 0.5
+
+Y_1 = rep(0, K)
+Y_1[2] = 1
+
+Y_15 = rep(0, K)
+Y_15[2] = 1.5 
+
+Y_2 = rep(0, K)
+Y_2[2] = 2
+
+Y_25 = rep(0, K)
+Y_25[2] = 2.5
+
+# the respective power
+ratio_05 = NULL
+ratio_1 = NULL
+ratio_15 = NULL
+ratio_2 = NULL
+ratio_25 = NULL
+
+for (i in 1:d){
+  ratio_05[i] = ratio_power(Y_05, i * 1/d, 1, N, K, compute_pcombine, compute_power)
+  ratio_1[i] = ratio_power(Y_1, i * 1/d, 1, N, K, compute_pcombine, compute_power)  
+  ratio_15[i] = ratio_power(Y_15, i * 1/d, 1, N, K, compute_pcombine, compute_power)
+  ratio_2[i] = ratio_power(Y_2, i * 1/d, 1, N, K, compute_pcombine, compute_power)
+  ratio_25[i] = ratio_power(Y_25, i * 1/d, 1, N, K, compute_pcombine, compute_power)
+}
+
+
+plot(seq(1/d, 1, 1/d), ratio_05, type = "l", xlab = "r1_value", ylab = "Power", col = "aquamarine", main = "Power pattern with different Yk level given total number N = 1000")
+lines(seq(1/d, 1, 1/d), ratio_1, type = "l", col = "turquoise")
+lines(seq(1/d, 1, 1/d), ratio_15, type = "l", col = "cornflowerblue")
+lines(seq(1/d, 1, 1/d), ratio_2, type = "l", col = "deepskyblue")
+lines(seq(1/d, 1, 1/d), ratio_25, type = "l", col = "navyblue")
+
+legend("bottomright", c("Y = 0.5", "Y = 1", "Y = 1.5", "Y = 2", "Y = 2.5"), col = c("aquamarine", "Turquoise", "cornflowerblue", "deepskyblue", "navyblue"), lty=1)
+```
+
+```{r}
+# setting the total number to be a hundred thousand
+N = 50000
+K = 10
+d = 100
+# the scaled effective treatment 
+Y_05 = rep(0, K)
+Y_05[2] = 0.5
+
+Y_1 = rep(0, K)
+Y_1[2] = 1
+
+Y_15 = rep(0, K)
+Y_15[2] = 1.5 
+
+Y_2 = rep(0, K)
+Y_2[2] = 2
+
+Y_25 = rep(0, K)
+Y_25[2] = 2.5
+
+# the respective power
+ratio_05 = NULL
+ratio_1 = NULL
+ratio_15 = NULL
+ratio_2 = NULL
+ratio_25 = NULL
+
+for (i in 1:d){
+  ratio_05[i] = ratio_power(Y_05, i * 1/d, 1, N, K, compute_pcombine, compute_power)
+  ratio_1[i] = ratio_power(Y_1, i * 1/d, 1, N, K, compute_pcombine, compute_power)  
+  ratio_15[i] = ratio_power(Y_15, i * 1/d, 1, N, K, compute_pcombine, compute_power)
+  ratio_2[i] = ratio_power(Y_2, i * 1/d, 1, N, K, compute_pcombine, compute_power)
+  ratio_25[i] = ratio_power(Y_25, i * 1/d, 1, N, K, compute_pcombine, compute_power)
+}
+
+
+plot(seq(1/d, 1, 1/d), ratio_05, type = "l", xlab = "r1_value", ylab = "Power", col = "aquamarine", main = "Power pattern with different Yk level given total number N = 50000")
+lines(seq(1/d, 1, 1/d), ratio_1, type = "l", col = "turquoise")
+lines(seq(1/d, 1, 1/d), ratio_15, type = "l", col = "cornflowerblue")
+lines(seq(1/d, 1, 1/d), ratio_2, type = "l", col = "deepskyblue")
+lines(seq(1/d, 1, 1/d), ratio_25, type = "l", col = "navyblue")
+
+legend("bottomright", c("Y = 0.5", "Y = 1", "Y = 1.5", "Y = 2", "Y = 2.5"), col = c("aquamarine", "Turquoise", "cornflowerblue", "deepskyblue", "navyblue"), lty=1)
+```
+
+```{r}
+# setting the total number to be a hundred thousand
+N = 500000
+K = 10
+d = 100
+# the scaled effective treatment 
+Y_05 = rep(0, K)
+Y_05[2] = 0.5
+
+Y_1 = rep(0, K)
+Y_1[2] = 1
+
+Y_15 = rep(0, K)
+Y_15[2] = 1.5 
+
+Y_2 = rep(0, K)
+Y_2[2] = 2
+
+Y_25 = rep(0, K)
+Y_25[2] = 2.5
+
+# the respective power
+ratio_05 = NULL
+ratio_1 = NULL
+ratio_15 = NULL
+ratio_2 = NULL
+ratio_25 = NULL
+
+for (i in 1:d){
+  ratio_05[i] = ratio_power(Y_05, i * 1/d, 1, N, K, compute_pcombine, compute_power)
+  ratio_1[i] = ratio_power(Y_1, i * 1/d, 1, N, K, compute_pcombine, compute_power)  
+  ratio_15[i] = ratio_power(Y_15, i * 1/d, 1, N, K, compute_pcombine, compute_power)
+  ratio_2[i] = ratio_power(Y_2, i * 1/d, 1, N, K, compute_pcombine, compute_power)
+  ratio_25[i] = ratio_power(Y_25, i * 1/d, 1, N, K, compute_pcombine, compute_power)
+}
+
+
+plot(seq(1/d, 1, 1/d), ratio_05, type = "l", xlab = "r1_value", ylab = "Power", col = "aquamarine", main = "Power pattern with different Yk level given total number N = 500000")
+lines(seq(1/d, 1, 1/d), ratio_1, type = "l", col = "turquoise")
+lines(seq(1/d, 1, 1/d), ratio_15, type = "l", col = "cornflowerblue")
+lines(seq(1/d, 1, 1/d), ratio_2, type = "l", col = "deepskyblue")
+lines(seq(1/d, 1, 1/d), ratio_25, type = "l", col = "navyblue")
+
+legend("bottomright", c("Y = 0.5", "Y = 1", "Y = 1.5", "Y = 2", "Y = 2.5"), col = c("aquamarine", "Turquoise", "cornflowerblue", "deepskyblue", "navyblue"), lty=1)
+```
 
 
 

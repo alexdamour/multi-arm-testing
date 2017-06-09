@@ -7,12 +7,14 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(Iso)
 source("PvalueFunction.R")
 source("RatioPower.R")
 ```
 
 ```{r}
-n = 1000
+# Setting the unit number to 1000
+N = 10000
 ```
 
 
@@ -27,7 +29,7 @@ power_10 = NULL
 for (j in 1:100){
   Y_j[2] = 0.01 * j
   r1_j = Y_j[2] /1
-  power_10[j] = ratio_power(Y_j, r1_j , 1, n, K, compute_pcombine, compute_power)
+  power_10[j] = ratio_power(Y_j, r1_j, 1, N, K, compute_pcombine, compute_power)
 
   }
 plot(seq(0.01,1,0.01), power_10, type = "l", xlab = "r1_value", ylab ="power ", main = "Power with increasing r1 given K")
@@ -43,7 +45,7 @@ power_50 = NULL
 for (j in 1:100){
   Y_j[2] = 0.01 * j
   r1_j = Y_j[2] /1
-  power_50[j] = ratio_power(Y_j, r1_j , 1, n, K, compute_pcombine, compute_power)
+  power_50[j] = ratio_power(Y_j, r1_j , 1, N, K, compute_pcombine, compute_power)
 }
 plot(seq(0.01,1,0.01), power_50, type = "l", xlab = "r1_value", main = "Power with effective Y1 given K = 50" )
 
@@ -58,9 +60,13 @@ power_100 = NULL
 for (j in 1:100){
   Y_j[2] = 0.01 * j
   r1_j = Y_j[2] /1
-  power_100[j] = ratio_power(Y_j, r1_j , 1, n, K, compute_pcombine, compute_power)
+  power_100[j] = ratio_power(Y_j, r1_j , 1, N, K, compute_pcombine, compute_power)
 }
 plot(seq(0.01,1,0.01), power_100, type = "l", xlab = "r1_value", main = "Power with effective Y1 given K = 100" )
+
+
+
+
 ```
 
 ## Compare the power pattern given different size K
@@ -81,7 +87,7 @@ power_K = NULL
 for (k in 2:201){
   Y_k = rep(0,k)
   Y_k[2] = 1
-  power_K[k] = ratio_power(Y_k , 1 , 1, n, k, compute_pcombine, compute_power)
+  power_K[k] = ratio_power(Y_k , 1 , 1, N, k, compute_pcombine, compute_power)
 }
 
 plot(power_K, type = "l", xlab = "K size", main = "Power with k size given r1 = 1" )
@@ -93,7 +99,7 @@ power_K = NULL
 for (k in 2:200){
   Y_k = rep(0,k)
   Y_k[2] = 1
-  power_K[k] = ratio_power(Y_k , 0.5 , 1, n, k, compute_pcombine, compute_power)
+  power_K[k] = ratio_power(Y_k , 0.5 , 1, N, k, compute_pcombine, compute_power)
 }
 
 plot(seq(2,201,1), power_K, type = "l", xlab = "K size", main = "Power with k size given r1 = 0.5" )
@@ -101,24 +107,6 @@ plot(seq(2,201,1), power_K, type = "l", xlab = "K size", main = "Power with k si
 
 
 # C. 80% Power critical ratio for treatment size K
-```{r}
-start.time = Sys.time()
-
-critical_ratio = NULL
-for (k in 2:5){
-  Yk = rep(0,k)
-  Yk[2] = 1 
-  
-  critical_ratio[k] = compute_ctratio(Yk, n, k)
-}
-
-# plot the critical ratio against the k treatments number
-plot(critical_ratio, type = "l", xlab = "K size", main = "Critical ratio value with k size" )
-
-end.time = Sys.time()
-time.taken_ctratio = end.time - start.time
-time.taken_ctratio
-```
 
 ```{r}
 start.time = Sys.time()
@@ -128,7 +116,7 @@ for (k in 2:100){
   Yk = rep(0,k)
   Yk[2] = 1 
   
-  critical_ratio[k] = compute_binary_ctratio(Yk, n, k, 0.005)
+  critical_ratio[k] = compute_binary_ctratio(Yk, N, k, 0.005)
 }
 
 # plot the critical ratio against the k treatments number
@@ -137,12 +125,21 @@ plot(critical_ratio, type = "l", xlab = "K size", main = "Critical ratio value w
 end.time = Sys.time()
 time.taken_binaryctratio = end.time - start.time
 time.taken_binaryctratio
+
+x <- seq(2,98,1)
+critical_ratio = critical_ratio[1:97]
+iso1 =  ufit(critical_ratio, x, type = "b")
+plot(x, critical_ratio, type = "l", xlab = "K size", ylab = "Critical ratio", main = "Isotonic Regression Plot")
+lines(iso1$y, col="red")
+
+
+
 ```
 
-## Analyze the increasing rate of critical ratio with K - log K and squared K form
-```{r}
-start.time = Sys.time()
 
+## Analyze the increasing rate of critical ratio with K - log K and squared K form
+### Plot the critical ratio against log k and squared k
+```{r}
 logk = NULL
 sqrtk = NULL
 for (k in 2:100){
@@ -156,6 +153,7 @@ for (k in 2:100){
 plot(sqrtk, critical_ratio, type = "l", xlab = "squared K size", main = "Critical ratio value with squared k" )
 ```
 
+### Linear regression to test 
 ```{r}
 logreg = lm(critical_ratio~logk)
 summary(logreg)
