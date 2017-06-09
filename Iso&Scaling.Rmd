@@ -13,13 +13,54 @@ knitr::opts_chunk$set(echo = TRUE)
 library(Iso)
 ```
 
+# Compute K power
+## K = 10
+```{r}
+N <- 10000
+K = 10
+Y = rep(0, K)
+Y_j = Y
+power_10 = NULL
+for (j in 1:100){
+  Y_j[2] = 0.01 * j
+  r1_j = Y_j[2] /1
+  power_10[j] = ratio_power(Y_j, r1_j , 1, N, K, compute_pcombine, compute_power)
+}
+```
+
+## K = 50
+```{r}
+K = 50
+Y = rep(0, K)
+Y_j = Y
+power_50 = NULL
+for (j in 1:100){
+  Y_j[2] = 0.01 * j
+  r1_j = Y_j[2] /1
+  power_50[j] = ratio_power(Y_j, r1_j , 1, N, K, compute_pcombine, compute_power)
+}
+```
+
+## K = 100
+```{r}
+K = 100
+Y = rep(0, K)
+Y_j = Y
+power_100 = NULL
+for (j in 1:100){
+  Y_j[2] = 0.01 * j
+  r1_j = Y_j[2] /1
+  power_100[j] = ratio_power(Y_j, r1_j , 1, N, K, compute_pcombine, compute_power)
+}
+```
+
 # Isotonic Regression
 ```{r}
 x <- seq(0.01,1,0.01)
-iso1 <- ufit(power_10, x1, type = "b")
-iso2 <- ufit(power_50, x1, type = "b")
-iso3 <- ufit(power_100, x1, type = "b")
-plot(x1, power_10, type = "l", xlab = "r1_value", ylab = "power", main = "Isotonic Regression Plot")
+iso1 <- ufit(power_10, x, type = "b")
+iso2 <- ufit(power_50, x, type = "b")
+iso3 <- ufit(power_100, x, type = "b")
+plot(x, power_10, type = "l", xlab = "r1_value", ylab = "power", main = "Isotonic Regression Plot")
 lines(x, power_50)
 lines(x, power_100)
 lines(iso1, col="red")
@@ -71,6 +112,105 @@ end.time = Sys.time()
 time.taken = end.time - start.time
 time.taken
 ```
+
+# P-value
+## K = 10
+```{r}
+start.time = Sys.time()
+
+N <- 10000
+K <- 10
+Y11 <- rep(0, K)
+d <- 100
+temp11 <- NULL
+temp12 <- NULL
+temp13 <- NULL
+temp14 <- NULL
+for (j in 1:d){
+  Y11[2] <- Y11[2] + 1/d
+  temp11[j] <- ratio_power(Y11, 0.01, 1, N, K, compute_pcombine, compute_power)
+  temp12[j] <- ratio_power(Y11, 0.01, 1, N, K, compute_pcombine, compute_power, ptype = "max")
+  temp13[j] <- ratio_power(Y11, 0.01, 1, N, K, compute_pcombine, compute_power, ptype = "median")
+  temp14[j] <- ratio_power(Y11, 0.01, 1, N, K, compute_pcombine, compute_power, ptype = "mean")
+}
+
+plot(seq(0.01,1,0.01), temp11, type = "l", xlab = "Y1_value", ylab = "Power")
+lines(seq(0.01,1,0.01), temp12, type = "l", col = "red")
+lines(seq(0.01,1,0.01), temp13, type = "l", col = "blue")
+lines(seq(0.01,1,0.01), temp14, type = "l", col = "green")
+
+end.time = Sys.time()
+time.taken = end.time - start.time
+time.taken
+```
+
+## K = 50
+```{r}
+start.time = Sys.time()
+
+N <- 10000
+K <- 50
+Y21 <- rep(0, K)
+d <- 100
+temp21 <- NULL
+temp22 <- NULL
+temp23 <- NULL
+temp24 <- NULL
+for (j in 1:d){
+  Y21[2] <- Y21[2] + 1/d
+  temp21[j] <- ratio_power(Y21, 0.01, 1, N, K, compute_pcombine, compute_power)
+  temp22[j] <- ratio_power(Y21, 0.01, 1, N, K, compute_pcombine, compute_power, ptype = "max")
+  temp23[j] <- ratio_power(Y21, 0.01, 1, N, K, compute_pcombine, compute_power, ptype = "median")
+  temp24[j] <- ratio_power(Y21, 0.01, 1, N, K, compute_pcombine, compute_power, ptype = "mean")
+}
+
+plot(seq(0.01,1,0.01), temp21, type = "l", xlab = "Y1_value", ylab = "Power")
+lines(seq(0.01,1,0.01), temp22, type = "l", col = "red")
+lines(seq(0.01,1,0.01), temp23, type = "l", col = "blue")
+lines(seq(0.01,1,0.01), temp24, type = "l", col = "green")
+
+end.time = Sys.time()
+time.taken = end.time - start.time
+time.taken
+```
+
+
+## K = 100
+```{r}
+start.time = Sys.time()
+
+N <- 10000
+K <- 100
+Y31 <- rep(0, K)
+d <- 100
+temp31 <- NULL
+temp32 <- NULL
+temp33 <- NULL
+temp34 <- NULL
+for (j in 1:d){
+  Y31[2] <- Y31[2] + 1/d
+  temp31[j] <- ratio_power(Y31, 0.01, 1, N, K, compute_pcombine, compute_power)
+  temp32[j] <- ratio_power(Y31, 0.01, 1, N, K, compute_pcombine, compute_power, ptype = "max")
+  temp33[j] <- ratio_power(Y31, 0.01, 1, N, K, compute_pcombine, compute_power, ptype = "median")
+  temp34[j] <- ratio_power(Y31, 0.01, 1, N, K, compute_pcombine, compute_power, ptype = "mean")
+}
+
+plot(seq(0.01,1,0.01), temp31, type = "l", xlab = "Y1_value", ylab = "Power")
+lines(seq(0.01,1,0.01), temp32, type = "l", col = "red")
+lines(seq(0.01,1,0.01), temp33, type = "l", col = "blue")
+lines(seq(0.01,1,0.01), temp34, type = "l", col = "green")
+
+end.time = Sys.time()
+time.taken = end.time - start.time
+time.taken
+```
+
+
+
+
+
+
+
 
 
 
