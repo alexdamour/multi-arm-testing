@@ -321,7 +321,7 @@ for (j in 1:d){
 }
 
 plot(seq(0.01,1,0.01), temp51, type = "l", xlab = "Y1_value", ylab = "Power"
-,main = "Power curve with different p-combined value type given K = 2", col = "turquoise")
+,main = "Power curve with different p-combined type given K = 2", col = "turquoise")
 lines(seq(0.01,1,0.01), temp52, type = "l", col = "cornflowerblue")
 lines(seq(0.01,1,0.01), temp53, type = "l", col = "deepskyblue")
 lines(seq(0.01,1,0.01), temp54, type = "l", col = "navyblue")
@@ -353,7 +353,7 @@ for (j in 1:d){
   temp64[j] <- ratio_power(Y61, 0.01, 1, N, K, compute_pcombine, compute_power, ptype = "mean")
 }
 
-plot(seq(0.01,1,0.01), temp61, type = "l", xlab = "Y1_value", ylab = "Power",main = "Power curve with different p-combined value type given K = 2", col = "turquoise")
+plot(seq(0.01,1,0.01), temp61, type = "l", xlab = "Y1_value", ylab = "Power",main = "Power curve with different p-combined type given K = 3", col = "turquoise")
 lines(seq(0.01,1,0.01), temp62, type = "l", col = "cornflowerblue")
 lines(seq(0.01,1,0.01), temp63, type = "l", col = "deepskyblue")
 lines(seq(0.01,1,0.01), temp64, type = "l", col = "navyblue")
@@ -388,10 +388,10 @@ for (j in 1:d){
   temp24[j] <- ratio_power(Y21, 0.01, 1, N, K, compute_pcombine, compute_power, ptype = "mean")
 }
 
-plot(seq(0.01,1,0.01), temp21, type = "l", xlab = "Y1_value", ylab = "Power",main = "Power curve with different p-combined value type given K = 50", col = "turquoise")
-lines(seq(0.01,1,0.01), temp22, type = "l", col = "cornflowerblue")
-lines(seq(0.01,1,0.01), temp23, type = "l", col = "deepskyblue")
-lines(seq(0.01,1,0.01), temp24, type = "l", col = "navyblue")
+plot(seq(0.01,1,0.01), temp21, type = "l", xlab = "Y1_value", ylab = "Power",main = "Power curve with different p-combined type given K = 50", col = "turquoise", knum = 10)
+lines(seq(0.01,1,0.01), temp22, type = "l", col = "cornflowerblue", knum = 10)
+lines(seq(0.01,1,0.01), temp23, type = "l", col = "deepskyblue", knum = 10)
+lines(seq(0.01,1,0.01), temp24, type = "l", col = "navyblue", knum = 10)
 
 legend("bottomright", c("Min ","Max", "Median", "Mean"), col = c("Turquoise","cornflowerblue", "deepskyblue", "navyblue"), lty=1)
 
@@ -421,7 +421,7 @@ for (j in 1:d){
   temp34[j] <- ratio_power(Y31, 0.01, 1, N, K, compute_pcombine, compute_power, ptype = "mean")
 }
 
-plot(seq(0.01,1,0.01), temp31, type = "l", xlab = "Y1_value", ylab = "Power", main = "Power curve with different p-combined value type given K = 100", col = "turquoise")
+plot(seq(0.01,1,0.01), temp31, type = "l", xlab = "Y1_value", ylab = "Power", main = "Power curve with different p-combined type given K = 100", col = "turquoise")
 lines(seq(0.01,1,0.01), temp22, type = "l", col = "cornflowerblue")
 lines(seq(0.01,1,0.01), temp23, type = "l", col = "deepskyblue")
 lines(seq(0.01,1,0.01), temp24, type = "l", col = "navyblue")
