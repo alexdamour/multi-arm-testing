@@ -78,6 +78,23 @@ legend("bottomright", c("K = 10", "K = 50", "K = 100"), col = c("Turquoise","Blu
 ```
 
 
+```{r}
+K = 10
+Y = rep(0, K)
+Y_j = Y
+power_10 = NULL
+for (j in 1:100){
+  Y_j[2] = 0.01 * j
+  r1_j = Y_j[2] /1
+  power_10[j] = ratio_power(Y_j, r1_j, 1, N, K, compute_pcombine, compute_power)
+
+  }
+plot(seq(0.01,1,0.01), power_10, type = "l", xlab = "r1_value", ylab ="power ", main = "Power with increasing r1 given K")
+```
+
+
+
+
 
 
 # B. Caculate the power with K increasing 

@@ -1,6 +1,6 @@
 # define a function that returns the power value given 
 # ratio r1 = y1/sig1 and ratio rk = sigk/sig1
-ratio_power = function(Y, r1, rk, N, K, compute_pcombine, compute_power, knum = 1, ktype = "homo", ptype = "min"){
+ratio_power = function(Y, r1, rk, N, K, compute_pcombine, compute_power, knum = 1, ktype = "homo", ptype = "min", power_rep = N){
   # the treatment level y1
   y1 = Y[2]
   sig1 = y1/r1
@@ -28,12 +28,15 @@ ratio_power = function(Y, r1, rk, N, K, compute_pcombine, compute_power, knum = 
   
   # compute the corresponding p_power 
   power = NULL
+  
+  # get the experiment number to calculate power
+  R = power_rep/K
+  
   # derive the critical value p_cv for null hypothesis
   p_cv = quantile(compute_pcombine(Y_null, sigk, N, K, ptype), 0.05)
   # get the sparse effect 
-  
   for (j in 1:knum){
-    power[j] = compute_power(Y, sigk, N, K, p_cv, ptype)
+    power[j] = compute_power(Y, sigk, N, K, p_cv, ptype, R)
   }
   avg_power = mean(power)
   

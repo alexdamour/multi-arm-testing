@@ -489,7 +489,7 @@ lines(seq(1/d, 1, 1/d), ratio_25, type = "l", col = "navyblue")
 legend("bottomright", c("Y = 0.5", "Y = 1", "Y = 1.5", "Y = 2", "Y = 2.5"), col = c("aquamarine", "Turquoise", "cornflowerblue", "deepskyblue", "navyblue"), lty=1)
 ```
 
-
+## Contour set
 
 
 

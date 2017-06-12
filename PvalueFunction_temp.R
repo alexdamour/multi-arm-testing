@@ -59,13 +59,22 @@ compute_pcombine <- function(Yk, sigk, N, K, ptype){
 
 
 ##Generate power function
-compute_power <- function(Yk, sigk, N, K, p_cv, ptype){
-  n <- N/K
+compute_power <- function(Yk, sigk, N, K, p_cv, ptype, R = N/K){
   power = 0
   pcomb = compute_pcombine(Yk, sigk, N, K, ptype)
+  # sample from pcomb
+  if (R <= N/K){ 
+    pcomb = sample(pcomb, R)
+  }else{
+    pcomb = sample(pcomb, R, replace = TRUE)
+  }
   rejec = 0
   rec = 0
-  for (i in 1:n){
+  
+  # the number of experiments
+  exp = length(pcomb)
+  
+  for (i in 1:exp){
     if(pcomb[i] <= p_cv){
       rejec = rejec + 1
     }else{

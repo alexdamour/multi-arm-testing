@@ -114,7 +114,6 @@ power_ratio_test = function(Y, N, K, n_r1, n_rk, ktype = "homo", knum = 1, ratio
           power_matrix[i,j] = mean(power_exp)}
       }
     }else{
-<<<<<<< HEAD
       if (ktype == "rk-hetero"){
         for (i in 1:n_r1){
           r1_i = i * step_r1
@@ -140,9 +139,6 @@ power_ratio_test = function(Y, N, K, n_r1, n_rk, ktype = "homo", knum = 1, ratio
         }else{
      print("Error: not choosing the appropriate ktype")
         }
-=======
-      print("Error: not choosing the appropriate ktype")
->>>>>>> 0f3cc65e2ea3447cf59f0c48dea56b6534657d89
     }
   }
   return( list(power_matrix = power_matrix, rk = rk_item, r1 = r1_item) )

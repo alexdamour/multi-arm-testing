@@ -1,0 +1,196 @@
+---
+title: "RepeatedExperimentPowerAnalysis"
+author: "Xiaohui Li Yuxin Ma"
+date: "6/9/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+
+# Function of computing p-value
+source("PvalueFunction_temp.R")
+# Function of computing power
+source("RatioPower_temp.R")
+```
+
+Setting exogeneous parameters
+```{r}
+# Number of units 
+N = 10000
+# Number of treatments
+K = 10
+
+rk = 1
+r1_temp = 0.1
+
+d = 100
+# Derive the given Y mean array 
+Y = rep(0, K)
+# Sparse treament with 1 level effect
+Y[2] = 1
+```
+
+#1 Test for repeated number R
+## R = 10
+```{r}
+R = 10 
+pow_rep =  R * K 
+
+power_test_10 = NULL
+
+power_step_10 = NULL
+for (j in 1:100){
+ power_test_10[j] = ratio_power(Y, r1_temp, rk, N, K, compute_pcombine, compute_power, power_rep = pow_rep)
+}
+
+hist(power_test_10)
+
+for (i in 1:d){
+  r1_step = i * 1/d 
+  power_step_10[i] = ratio_power(Y, r1_step, rk, N, K, compute_pcombine, compute_power)
+}
+
+
+
+```
+
+## R = 50
+```{r}
+R = 50 
+pow_rep =  R * K
+
+power_test_50 = NULL
+power_step_50 = NULL
+
+for (j in 1:100){
+ power_test_50[j] = ratio_power(Y, r1_temp, rk, N, K, compute_pcombine, compute_power, power_rep = pow_rep)
+}
+
+hist(power_test_50)
+
+for (i in 1:d){
+  r1_step = i * 1/d 
+  power_step_50[i] = ratio_power(Y, r1_step, rk, N, K, compute_pcombine, compute_power, power_rep = pow_rep)
+}
+
+```
+
+## R = n
+```{r}
+power_test_n = NULL
+power_step_n = NULL
+
+for (j in 1:100){
+ power_test_n[j] = ratio_power(Y, r1_temp, rk, N, K, compute_pcombine, compute_power)
+}
+
+hist(power_test_n)
+
+for (i in 1:d){
+  r1_step = i * 1/d 
+  power_step_n[i] = ratio_power(Y, r1_step, rk, N, K, compute_pcombine, compute_power)
+}
+
+```
+
+
+```{r}
+mean(power_test_10)
+mean(power_test_50)
+mean(power_test_n)
+var(power_test_10)
+var(power_test_50)
+var(power_test_n)
+
+
+```
+
+#2 CV
+
+1) direct bootstrap
+```{r}
+pow_rep = N * 50
+power_test_boot = NULL
+power_step_boot = NULL
+
+for (j in 1:100){
+ power_test_boot[j] = ratio_power(Y, r1_temp, rk, N, K, compute_pcombine, compute_power, power_rep = pow_rep)
+}
+hist(power_test_boot)
+mean(power_test_boot)
+var(power_test_boot)
+
+for (i in 1:d){
+  r1_step = i * 1/d 
+  power_step_boot[i] = ratio_power(Y, r1_step, rk, N, K, compute_pcombine, compute_power, power_rep = pow_rep)
+}
+
+plot(seq(0.01,1,0.01), power_step_boot, type = "l", xlab = "r1_value", ylab ="power", main = "Power with increasing r1 given 50 repeated bootstrap experiments")
+
+```
+
+2) independent repeat experiment
+a. 10 time repetition
+```{r}
+power_test_cvez = NULL
+power_step_cvez = NULL
+
+for (j in 1:100){
+ power_test_cvez[j] = ratio_power(Y, r1_temp, rk, N, K, compute_pcombine, compute_power, knum = 10)
+}
+hist(power_test_cvez)
+mean(power_test_cvez)
+var(power_test_cvez)
+
+
+for (i in 1:d){
+  r1_step = i * 1/d 
+  power_step_cvez[i] = ratio_power(Y, r1_step, rk, N, K, compute_pcombine, compute_power, knum = 10)
+}
+
+plot(seq(0.01,1,0.01), power_step_cvez, type = "l", xlab = "r1_value", ylab ="power", main = "Power with increasing r1 given 10 repeated CV experiments")
+```
+
+b. 50 time repetition 
+```{r}
+
+power_test_cv = NULL
+power_step_cv = NULL
+
+for (j in 1:100){
+ power_test_cv[j] = ratio_power(Y, r1_temp, rk, N, K, compute_pcombine, compute_power, knum = 50)
+}
+hist(power_test_cv)
+mean(power_test_cv)
+var(power_test_cv)
+
+
+for (i in 1:d){
+  r1_step = i * 1/d 
+  power_step_cv[i] = ratio_power(Y, r1_step, rk, N, K, compute_pcombine, compute_power, knum = 50)
+}
+
+plot(seq(0.01,1,0.01), power_step_cv, type = "l", xlab = "r1_value", ylab ="power", main = "Power with increasing r1 given 50 repeated CV experiments")
+
+
+```
+
+3)
+```{r}
+power_data = data.frame(rep_10 = power_test_10, rep_50 = power_test_50, rep_n = power_test_50, boot_50 = power_test_boot, cv_10 = power_test_cvez, cv_50 = power_test_cv)
+
+power_data = melt(power_data)
+ggplot(power_data, aes(x = value, fill = variable)) + geom_histogram(alpha = 0.4, position = "identity") + ggtitle("Power histogram given different repetition time")
+
+```
+
+```{r}
+power_step_data = data.frame(r1_value = seq(0.01, 1, 0.01), rep_10 = power_step_10, rep_50 = power_step_50, rep_n = power_step_50, boot_50 = power_step_boot, cv_10 = power_step_cvez, cv_50 = power_step_cv)
+
+power_step_data = melt(power_step_data, id = c("r1_value"))
+ggplot(power_step_data, aes(x = r1_value, y = value, color = variable)) + geom_line(size = 0.8) + labs(x = "r1_value", y ="power") + scale_x_continuous(limits = c(0,0.3)) + ggtitle("Power curve given different experiment repetition")
+```
+
+
