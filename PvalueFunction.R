@@ -31,25 +31,50 @@ compute_pvalue = function(Yk, sigk, N, K){
 
 
 ##Generate p-combine function
-compute_pcombine <- function(Yk, sigk, N, K){
+compute_pcombine <- function(Yk, sigk, N, K, ptype){
   n <- N/K
   p_comb_val <- NULL
   pmatrix <- compute_pvalue(Yk, sigk, N, K)
   for (k in 1:n){
-    p_comb_val[k] = min(pmatrix[k,-1]) #minimum
+    if (ptype == "min"){
+      p_comb_val[k] = min(pmatrix[k,-1])
+    }else{
+      if (ptype == "max"){
+        p_comb_val[k] = max(pmatrix[k,-1])  
+      }else{
+        if (ptype == "median"){
+          p_comb_val[k] = median(pmatrix[k,-1])
+        }else{
+          if (ptype == "mean"){
+            p_comb_val[k] = mean(pmatrix[k,-1])
+          }else{
+            print("Error: not choosing the existent type")
+          }
+        }
+      }
+    }
   }
   return (p_comb_val)
 }
 
 
 ##Generate power function
-compute_power <- function(Yk, sigk, N, K, p_cv){
-  n <- N/K
+compute_power <- function(Yk, sigk, N, K, p_cv, ptype, R = N/K){
   power = 0
-  pcomb = compute_pcombine(Yk, sigk, N, K)
+  pcomb = compute_pcombine(Yk, sigk, N, K, ptype)
+  # sample from pcomb
+  if (R <= N/K){ 
+    pcomb = sample(pcomb, R)
+  }else{
+    pcomb = sample(pcomb, R, replace = TRUE)
+  }
   rejec = 0
   rec = 0
-  for (i in 1:n){
+  
+  # the number of experiments
+  exp = length(pcomb)
+  
+  for (i in 1:exp){
     if(pcomb[i] <= p_cv){
       rejec = rejec + 1
     }else{
