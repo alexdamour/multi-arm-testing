@@ -67,7 +67,7 @@ We have found a new finding different from last week about the fitness to the cr
 \quad\\
 We further apply the linear regression to compare $\sqrt{K}$ and $\log{K}$.\\
 \begin{figure}[htbp]
-\centering\includegraphics[width=4.8in, height=5in]{reg}
+\centering\includegraphics[width=4.3in, height=5in]{reg}
 \caption{Regression Summary}
 \end{figure}
 \quad\\
@@ -92,7 +92,8 @@ To make the power non-decreasing, which will be a more reasonable result, we use
 \quad\\
 \section{Repetition Times}
 To make our analysis much more reasonable, we try to increases the repetition times of our experiment. But the ways to increase the repetition times is very important. Simply just increasing $N$ is actually not the best choice since the $\sigma$ will also increase at the same time, leading to the less reasonable comparison between the experiments. So we come up with other ways to increase the repetition times, in the sense of bootstrap sampling and independent repetition experiments, deriving more sample p-values and taking the mean of them. \\
-From a power derivation with one p-value matrix, we could at least get $\frac{N}{K}$ number for getting power. However, given the assumption of independence, we could repeatedly randomly sample to increase the repetition number. (rep\_10, rep\_50, rep\_n, boot\_50 increase from 10 times to 50*n times) In addition, we could repeat the whole power derivation process and get more independent results. (cv\_10, cv\_50) The results is shown in the following.
+\quad\\
+From a power derivation with one p-value matrix, we could at least get $\frac{N}{K}$ number for getting power. However, given the assumption of independence, we could repeatedly randomly sample to increase the repetition number (rep\_10, rep\_50, rep\_n, boot\_50 increase from 10 times to 50$\times$n times). In addition, we could repeat the whole power derivation process and get more independent results (cv\_10, cv\_50). The results are shown in the following.
 \begin{figure}[htbp]
 \centering\includegraphics[width=11cm,height=8cm]{hist}
 \caption{Power histogram given different ways to increase the repetition times}
@@ -102,7 +103,7 @@ Note as the repetition time increases, the power samples are more closely distri
 
 We next test the power curve given different repetition times.
 \begin{figure}[htbp] 
-\centering\includegraphics[width=11cm,height=8cm]{line}
+\centering\includegraphics[width=10cm,height=7cm]{line}
 \caption{Power curve given different ways to increase the repetition times}
 \end{figure}
 \quad\\
@@ -114,12 +115,12 @@ For this part, we hold $r_1=\frac{Y_1}{\sigma_1}$ and $r_k=\frac{\sigma_k}{\sigm
 \begin{figure}[htbp]
 \centering\subfigure[]{
 \begin{minipage}{8cm}
-\centering\includegraphics[width=8cm,height=6.5cm]{sca1}
+\centering\includegraphics[width=8cm,height=6.2cm]{sca1}
 \end{minipage}
 }
 \subfigure[]{
 \begin{minipage}{6cm}
-\centering\includegraphics[width=8cm,height=6.5cm]{sca2}
+\centering\includegraphics[width=8cm,height=6.2cm]{sca2}
 \end{minipage}
 }
 \caption{Scaling Plot}
@@ -137,7 +138,7 @@ To the further discussion of $r_1$, we hold $Y_1$ constant while varying $r_1$ t
 \caption{$r_1$ Plot}
 \end{figure}
 \quad\\
-We can see that it corresponds to the plot before as the power first decreases and then increases. And if $Y_1$ increases, the power will become more stable.
+We can see that it corresponds to the plot before as the power first decreases and then increases. And if $Y_1$ increases, the power will become more stable.\\
 
 
 \section{P-combined Analysis}
