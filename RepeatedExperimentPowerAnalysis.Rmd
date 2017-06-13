@@ -193,4 +193,9 @@ power_step_data = melt(power_step_data, id = c("r1_value"))
 ggplot(power_step_data, aes(x = r1_value, y = value, color = variable)) + geom_line(size = 0.8) + labs(x = "r1_value", y ="power") + scale_x_continuous(limits = c(0,0.3)) + ggtitle("Power curve given different experiment repetition")
 ```
 
+```{r}
+var(power_test_boot)
+var(power_test_cvez)
+var(power_test_cv)
+```
 
