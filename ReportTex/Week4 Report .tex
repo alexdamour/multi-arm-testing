@@ -154,13 +154,19 @@ Before, we take the minimum of p-values to generate p\_combined value, and this 
 \centering\includegraphics[width=8cm,height=6.5cm]{3}
 \end{minipage}
 }
+\subfigure[K=5]{
+\begin{minipage}{8cm}
+\centering\includegraphics[width=8cm,height=6.5cm]{5}
+\end{minipage}
+}
+\subfigure[K=50]{
+\begin{minipage}{6cm}
+\centering\includegraphics[width=8cm,height=6.5cm]{50}
+\end{minipage}
+}
 \caption{Power plot of different type of p\_combined}
 \end{figure}
-\begin{figure}[htbp]
-\centering\includegraphics[width=10cm,height=7cm]{5}
-\caption{Power plot when K=5 by different type of p\_combined}
-\end{figure}
-\quad\\
+
 From the plot we can see that as $K=2$, all four types of p\_combined seems to have the same pattern. But when $K$ increases to 3, the minimum still keeps the "S-shape" curve but other three curves become lower. When $K=5$, actually including all values bigger than 5 according to our experiments, the minimum curve still keeps its pattern; the maximum and mean curve just not increase any more and stay horizontally; the median curve has a small increasing trend, a little higher than the mean and maximum curve but much lower than the minimum curve. So we can see the the minimum curve is the most stable one.
 
 

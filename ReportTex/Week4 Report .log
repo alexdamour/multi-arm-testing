@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  12 JUN 2017 23:17
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  12 JUN 2017 23:25
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -496,36 +496,47 @@ Overfull \hbox (56.88641pt too wide) in paragraph at lines 156--156
 <5.jpeg, id=47, 2224.31pt x 1373.13pt>
 File: 5.jpeg Graphic file (type jpg)
  <use 5.jpeg>
-Package pdftex.def Info: 5.jpeg used on input line 160.
-(pdftex.def)             Requested size: 284.52065pt x 199.15112pt.
- [5 <./sca3.png> <./r1.jpeg>] [6 <./2.jpeg> <./3.jpeg> <./5.jpeg>] (./Week4 Rep
-ort .aux) ) 
+Package pdftex.def Info: 5.jpeg used on input line 161.
+(pdftex.def)             Requested size: 227.60294pt x 184.92455pt.
+
+<50.jpeg, id=48, 2224.31pt x 1373.13pt>
+File: 50.jpeg Graphic file (type jpg)
+ <use 50.jpeg>
+Package pdftex.def Info: 50.jpeg used on input line 166.
+(pdftex.def)             Requested size: 227.60294pt x 184.92455pt.
+
+Overfull \hbox (56.88641pt too wide) in paragraph at lines 166--166
+ [][] 
+ []
+
+[5 <./sca3.png> <./r1.jpeg>] [6 <./2.jpeg> <./3.jpeg> <./5.jpeg> <./50.jpeg>]
+(./Week4 Report .aux) ) 
 Here is how much of TeX's memory you used:
- 3716 strings out of 493014
- 49173 string characters out of 6133351
+ 3721 strings out of 493014
+ 49226 string characters out of 6133351
  126063 words of memory out of 5000000
- 7175 multiletter control sequences out of 15000+600000
+ 7179 multiletter control sequences out of 15000+600000
  12882 words of font info for 35 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  38i,10n,43p,769b,336s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/cm-super/cm-supe
-r-t1.enc}</usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmm
-i10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
-5.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.
-pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pf
-b></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb><
-/usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></us
-r/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr
-/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb></usr/l
-ocal/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/loc
-al/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/local
-/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/t
-exlive/2016/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/tex
-live/2016/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb>
-Output written on "Week4 Report .pdf" (6 pages, 2080861 bytes).
+{/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/cm-s
+uper/cm-super-t1.enc}</usr/local/texlive/2016/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmmi10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmmi5.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmmi7.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmr10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmr5.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mr7.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy
+10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfbx1000
+.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfbx1440.p
+fb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb
+></usr/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb><
+/usr/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></u
+sr/local/texlive/2016/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb>
+Output written on "Week4 Report .pdf" (6 pages, 2281924 bytes).
 PDF statistics:
- 97 PDF objects out of 1000 (max. 8388607)
+ 98 PDF objects out of 1000 (max. 8388607)
  55 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 71 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 76 words of extra memory for PDF output out of 10000 (max. 10000000)
 
