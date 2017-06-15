@@ -86,7 +86,7 @@ To make the power non-decreasing, which will be a more reasonable result, we use
 \quad\\
 \quad\\
 \section{Scaling}
-For this part, we hold $r_1=\frac{Y_1}{\sigma_1}$ and $r_k=\frac{\sigma_k}{\sigma_1}$ to be constant, which means that $\frac{Y_1}{\sqrt{\sigma_1^2+\sigma_k^2}}$ is constant. Under this condition, we try to plot Y ranging from 0 to 1 by 0.01 step, as well as 1.2Y, 1.5Y and 2Y. But at the same time, we find the the ratio $r_1$ also has significant impact on the power, leading to the different power pattern of the plot. So we also make different plots by $r_1$ ranges from 0.01 to 0.3.
+For this part, we hold $r_1=\frac{Y_1}{\sigma_1}$ and $r_k=\frac{\sigma_k}{\sigma_1}$ to be constant, which means that $\frac{Y_1}{\sqrt{\sigma_1^2+\sigma_k^2}}$ is constant. Under this condition, we try to plot Y ranging from 0 to 1 by 0.01 step, as well as 1.2Y, 1.5Y and 2Y. But at the same time, we find the the ratio $r_1$ also has significant impact on the power, leading to the different power pattern of the plot. So we also make different plots by $r_1$ ranges from 0.01 to 0.3.\\
 \begin{figure}[htbp]
 \centering\subfigure[]{
 \begin{minipage}{10cm}
@@ -104,7 +104,12 @@ For this part, we hold $r_1=\frac{Y_1}{\sigma_1}$ and $r_k=\frac{\sigma_k}{\sigm
 \centering\includegraphics[width=8cm, height=6cm]{sca3}
 \caption{\label{1}Scaling Plot}
 \end{figure}
+\quad\\
 The first fact is that the  $r_1$ and $r_k$ could not determine the power, that is, the $Y_1$ and $\sigma$'s effect could not be together accounted for as one ratio. But the good news is that when we hold $r_1$ and $r_k$ constant, no matter how $Y_1$ changes, the power pattern seems to be the same. But from the plot we can see that when $r_1=0.01$, it turns out to be a "S-shape" curve; in $r_1=0.03$ and $r_1=0.05$, the horizontal part of the curve tends to oscillates more and the power, from the y-axis we can see, becomes smaller. When $r_1=0.08$, the plot seems all to be the horizontal oscillating part, and the power is around the smallest value, where maximum equals to around 0.3. When $r_1$ ranges from 0.1 to 0.2, we can see that the power all oscillates and increases closed to 1. And from Figure \ref{1}, we can see that all power equals to 1.\\
+\quad\\
+\quad\\
+\quad\\
+\quad\\
 \quad\\
 In the further discussion of $r_1$ (Figure 3.3), we hold $Y_1$  constant respectively in different level and vary $r_1$ from 0 to 1 to see its power pattern as follow.\\
 \begin{figure}[htbp]
@@ -120,7 +125,7 @@ In the further discussion of $r_1$ (Figure 3.3), we hold $Y_1$  constant respect
 }
 \caption{$r_1$ Plot with different total number N}
 \end{figure}
-\quad
+\quad\\
 We can see that it corresponds to the plot before as the power first decreases and then increases. And if $Y_1$ increases, the power will become more stable. Also after increasing the total number unit N, the power pattern will get closer, the vacillation effect seems to get reduced, but still there is disparity. 
 
 
