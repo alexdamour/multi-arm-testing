@@ -73,48 +73,23 @@ We further apply the linear regression to compare $\sqrt{K}$ and $\log{K}$.\\
 \quad\\
 Note the $\sqrt{K}$ 's $\beta$ coefficient is more statistically significant and larger, while the $r^2$ of log is also larger than $\log{k}$, this supports the reasoning that critical ratio is logarithm increase. In particular, the r squared for  $\sqrt{K}$ model is high as 0.9911, indicating a potential theoretical relationship.
 
-
-
 \section{Isotonic Regression}
 To make the power non-decreasing, which will be a more reasonable result, we use isotonic regression to the power and get a new plot where the isotonic curve is represented by the red lines. For this plot, we hold $r_k$ and $\sigma$ to be constant while varying $r_1$ and $Y_1$.\\
 \begin{figure}[htbp]
-\centering\includegraphics[width=10cm, height=8cm]{iso}
+\centering\includegraphics[width=8cm, height=6cm]{iso}
 \caption{Isotonic Regression Plot}
 \end{figure}
 \quad\\
 \quad\\
-\quad\\
-\quad\\
-\quad\\
-\quad\\
-\quad\\
-\quad\\
-\quad\\
-\section{Repetition Times}
-To make our analysis much more reasonable, we try to increases the repetition times of our experiment. But the ways to increase the repetition times is very important. Simply just increasing $N$ is actually not the best choice since the $\sigma$ will also increase at the same time, leading to the less reasonable comparison between the experiments. So we come up with other ways to increase the repetition times, in the sense of bootstrap sampling and independent repetition experiments, deriving more sample p-values and taking the mean of them. \\
-\quad\\
-From a power derivation with one p-value matrix, we could at least get $\frac{N}{K}$ number for getting power. However, given the assumption of independence, we could repeatedly randomly sample to increase the repetition number (rep\_10, rep\_50, rep\_n, boot\_50 increase from 10 times to 50$\times$n times). In addition, we could repeat the whole power derivation process and get more independent results (cv\_10, cv\_50). The results are shown in the following.
-\begin{figure}[htbp]
-\centering\includegraphics[width=11cm,height=8cm]{hist}
-\caption{Power histogram given different ways to increase the repetition times}
-\end{figure}
-\quad\\
-Note as the repetition time increases, the power samples are more closely distributed. And the repeated independent experiment is better off than bootstrap sampling. \\
-
-We next test the power curve given different repetition times.
-\begin{figure}[htbp] 
-\centering\includegraphics[width=10cm,height=7cm]{line}
-\caption{Power curve given different ways to increase the repetition times}
-\end{figure}
-\quad\\
-The independent method (cv\_10 and cv\_50) has more smooth curve than others. Also the variance of bootstrap method is 0.0003649825, while independent repetition is 9.204492e-05  and 4.950972e-05 respectively for 10 times and 50 times. Since the 50 times are much time costing than 10 times while the disparity of the two is not that much, we choose the repetition time of 10 as our applied power derivation choice.
 
 
+\quad\\
+\quad\\
 \section{Scaling}
-For this part, we hold $r_1=\frac{Y_1}{\sigma_1}$ and $r_k=\frac{\sigma_k}{\sigma_1}$ to be constant, which means that $\frac{Y_1}{\sqrt{\sigma_1^2+\sigma_k^2}}$ is constant. Under this condition, we try to plot Y ranging from 0 to 1 by 0.01 step, as well as 1.2Y, 1.5Y and 2Y. But at the same time, we find the the ratio $r_1$ also has significant impact on the power, leading to the different power pattern of the plot. So we also make different plots by $r_1$ ranges from 0.01 to 0.3.\\
+For this part, we hold $r_1=\frac{Y_1}{\sigma_1}$ and $r_k=\frac{\sigma_k}{\sigma_1}$ to be constant, which means that $\frac{Y_1}{\sqrt{\sigma_1^2+\sigma_k^2}}$ is constant. Under this condition, we try to plot Y ranging from 0 to 1 by 0.01 step, as well as 1.2Y, 1.5Y and 2Y. But at the same time, we find the the ratio $r_1$ also has significant impact on the power, leading to the different power pattern of the plot. So we also make different plots by $r_1$ ranges from 0.01 to 0.3.
 \begin{figure}[htbp]
 \centering\subfigure[]{
-\begin{minipage}{8cm}
+\begin{minipage}{10cm}
 \centering\includegraphics[width=8cm,height=6.2cm]{sca1}
 \end{minipage}
 }
@@ -126,13 +101,12 @@ For this part, we hold $r_1=\frac{Y_1}{\sigma_1}$ and $r_k=\frac{\sigma_k}{\sigm
 \caption{Scaling Plot}
 \end{figure}
 \begin{figure}[htbp]
-\centering\includegraphics[width=10cm,height=7cm]{sca3}
+\centering\includegraphics[width=8cm, height=6cm]{sca3}
 \caption{\label{1}Scaling Plot}
 \end{figure}
-\quad\\
 The first fact is that the  $r_1$ and $r_k$ could not determine the power, that is, the $Y_1$ and $\sigma$'s effect could not be together accounted for as one ratio. But the good news is that when we hold $r_1$ and $r_k$ constant, no matter how $Y_1$ changes, the power pattern seems to be the same. But from the plot we can see that when $r_1=0.01$, it turns out to be a "S-shape" curve; in $r_1=0.03$ and $r_1=0.05$, the horizontal part of the curve tends to oscillates more and the power, from the y-axis we can see, becomes smaller. When $r_1=0.08$, the plot seems all to be the horizontal oscillating part, and the power is around the smallest value, where maximum equals to around 0.3. When $r_1$ ranges from 0.1 to 0.2, we can see that the power all oscillates and increases closed to 1. And from Figure \ref{1}, we can see that all power equals to 1.\\
 \quad\\
-To the further discussion of $r_1$, we hold $Y_1$ constant while varying $r_1$ to see its power pattern as follow.\\
+In the further discussion of $r_1$ (Figure 3.3), we hold $Y_1$  constant respectively in different level and vary $r_1$ from 0 to 1 to see its power pattern as follow.\\
 \begin{figure}[htbp]
 \centering\subfigure[]{
 \begin{minipage}{8cm}
@@ -146,8 +120,8 @@ To the further discussion of $r_1$, we hold $Y_1$ constant while varying $r_1$ t
 }
 \caption{$r_1$ Plot with different total number N}
 \end{figure}
-\quad\\
-We can see that it corresponds to the plot before as the power first decreases and then increases. And if $Y_1$ increases, the power will become more stable. Also after increasing the total number unit N, the power pattern will get closer, the vacillation effect seems to get reduced, but still there is disparity. \\
+\quad
+We can see that it corresponds to the plot before as the power first decreases and then increases. And if $Y_1$ increases, the power will become more stable. Also after increasing the total number unit N, the power pattern will get closer, the vacillation effect seems to get reduced, but still there is disparity. 
 
 
 \section{P-combined Analysis}

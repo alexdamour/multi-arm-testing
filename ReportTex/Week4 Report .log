@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2016.1.28)  13 JUN 2017 04:20
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2016.1.28)  14 JUN 2017 22:44
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -371,185 +371,132 @@ Underfull \hbox (badness 10000) in paragraph at lines 48--75
 File: iso.png Graphic file (type png)
 
 <use iso.png>
-Package pdftex.def Info: iso.png used on input line 81.
-(pdftex.def)             Requested size: 284.516pt x 227.62523pt.
+Package pdftex.def Info: iso.png used on input line 79.
+(pdftex.def)             Requested size: 227.61006pt x 170.71892pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 79--93
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 79--93
+Underfull \hbox (badness 10000) in paragraph at lines 77--84
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 79--93
+Underfull \hbox (badness 10000) in paragraph at lines 77--84
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 79--93
+Underfull \hbox (badness 10000) in paragraph at lines 86--88
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 79--93
+Underfull \hbox (badness 10000) in paragraph at lines 86--88
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 79--93
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 79--93
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 79--93
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 79--93
-
- []
-
-<hist.jpeg, id=26, 2224.31pt x 1373.13pt>
-File: hist.jpeg Graphic file (type jpg)
- <use hist.jpeg>
-Package pdftex.def Info: hist.jpeg used on input line 98.
-(pdftex.def)             Requested size: 312.96252pt x 227.60428pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 94--103
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 94--103
-
- []
-
-[2 <./reg.png>] [3 <./iso.png> <./hist.jpeg>]
-<line.jpeg, id=35, 2224.31pt x 1373.13pt>
-File: line.jpeg Graphic file (type jpg)
- <use line.jpeg>
-Package pdftex.def Info: line.jpeg used on input line 106.
-(pdftex.def)             Requested size: 284.52065pt x 199.15112pt.
-
-<sca1.png, id=36, 693.59125pt x 425.59pt>
+<sca1.png, id=26, 693.59125pt x 425.59pt>
 File: sca1.png Graphic file (type png)
  <use sca1.png>
-Package pdftex.def Info: sca1.png used on input line 120.
+Package pdftex.def Info: sca1.png used on input line 95.
 (pdftex.def)             Requested size: 227.61581pt x 176.40874pt.
 
-<sca2.png, id=37, 689.57625pt x 422.57875pt>
+<sca2.png, id=27, 689.57625pt x 422.57875pt>
 File: sca2.png Graphic file (type png)
  <use sca2.png>
-Package pdftex.def Info: sca2.png used on input line 125.
+Package pdftex.def Info: sca2.png used on input line 100.
 (pdftex.def)             Requested size: 227.624pt x 176.41148pt.
 
-Overfull \hbox (56.90747pt too wide) in paragraph at lines 125--125
+Overfull \hbox (56.90747pt too wide) in paragraph at lines 100--100
  [][] 
  []
 
-<sca3.png, id=38, 683.55376pt x 412.54124pt>
+<sca3.png, id=28, 683.55376pt x 412.54124pt>
 File: sca3.png Graphic file (type png)
  <use sca3.png>
-Package pdftex.def Info: sca3.png used on input line 129.
-(pdftex.def)             Requested size: 284.53523pt x 199.16951pt.
+Package pdftex.def Info: sca3.png used on input line 104.
+(pdftex.def)             Requested size: 227.61775pt x 170.71672pt.
 
-<r1_1.jpeg, id=39, 1895.08pt x 1130.2225pt>
+<r1_1.jpeg, id=29, 1895.08pt x 1130.2225pt>
 File: r1_1.jpeg Graphic file (type jpg)
  <use r1_1.jpeg>
-Package pdftex.def Info: r1_1.jpeg used on input line 141.
+Package pdftex.def Info: r1_1.jpeg used on input line 115.
 (pdftex.def)             Requested size: 227.6022pt x 176.40712pt.
 
-<r1_2.jpeg, id=40, 1893.0725pt x 1116.17pt>
+<r1_2.jpeg, id=30, 1893.0725pt x 1116.17pt>
 File: r1_2.jpeg Graphic file (type jpg)
  <use r1_2.jpeg>
-Package pdftex.def Info: r1_2.jpeg used on input line 146.
+Package pdftex.def Info: r1_2.jpeg used on input line 120.
 (pdftex.def)             Requested size: 227.62108pt x 176.3938pt.
 
-Overfull \hbox (56.90456pt too wide) in paragraph at lines 146--146
+Overfull \hbox (56.90456pt too wide) in paragraph at lines 120--120
  [][] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 114--151
+Underfull \hbox (badness 10000) in paragraph at lines 89--125
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 114--151
-
- []
-
-[4 <./line.jpeg> <./sca1.png> <./sca2.png>]
-<2.jpeg, id=46, 2224.31pt x 1373.13pt>
+[2 <./reg.png>] <2.jpeg, id=35, 2224.31pt x 1373.13pt>
 File: 2.jpeg Graphic file (type jpg)
  <use 2.jpeg>
-Package pdftex.def Info: 2.jpeg used on input line 160.
+Package pdftex.def Info: 2.jpeg used on input line 134.
 (pdftex.def)             Requested size: 227.60294pt x 184.92455pt.
 
-<3.jpeg, id=47, 2224.31pt x 1373.13pt>
+<3.jpeg, id=36, 2224.31pt x 1373.13pt>
 File: 3.jpeg Graphic file (type jpg)
  <use 3.jpeg>
-Package pdftex.def Info: 3.jpeg used on input line 165.
+Package pdftex.def Info: 3.jpeg used on input line 139.
 (pdftex.def)             Requested size: 227.60294pt x 184.92455pt.
 
-Overfull \hbox (56.88641pt too wide) in paragraph at lines 165--165
+Overfull \hbox (56.88641pt too wide) in paragraph at lines 139--139
  [][] 
  []
 
-<5.jpeg, id=48, 2224.31pt x 1373.13pt>
+<5.jpeg, id=37, 2224.31pt x 1373.13pt>
 File: 5.jpeg Graphic file (type jpg)
  <use 5.jpeg>
-Package pdftex.def Info: 5.jpeg used on input line 170.
+Package pdftex.def Info: 5.jpeg used on input line 144.
 (pdftex.def)             Requested size: 227.60294pt x 184.92455pt.
 
-<50.jpeg, id=49, 2224.31pt x 1373.13pt>
+<50.jpeg, id=38, 2224.31pt x 1373.13pt>
 File: 50.jpeg Graphic file (type jpg)
  <use 50.jpeg>
-Package pdftex.def Info: 50.jpeg used on input line 175.
+Package pdftex.def Info: 50.jpeg used on input line 149.
 (pdftex.def)             Requested size: 227.60294pt x 184.92455pt.
 
-Overfull \hbox (56.88641pt too wide) in paragraph at lines 175--175
+Overfull \hbox (56.88641pt too wide) in paragraph at lines 149--149
  [][] 
  []
 
-[5 <./sca3.png> <./r1_1.jpeg> <./r1_2.jpeg>] [6 <./2.jpeg> <./3.jpeg> <./5.jpeg
-> <./50.jpeg>] (./Week4 Report .aux) ) 
+[3 <./iso.png> <./sca1.png> <./sca2.png>] [4 <./sca3.png> <./r1_1.jpeg> <./r1_2
+.jpeg>] [5 <./2.jpeg> <./3.jpeg> <./5.jpeg> <./50.jpeg>] (./Week4 Report .aux) 
+) 
 Here is how much of TeX's memory you used:
- 3714 strings out of 493089
- 49115 string characters out of 6134842
- 126678 words of memory out of 5000000
- 7115 multiletter control sequences out of 15000+600000
+ 3705 strings out of 493089
+ 48993 string characters out of 6134842
+ 127678 words of memory out of 5000000
+ 7107 multiletter control sequences out of 15000+600000
  12882 words of font info for 35 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  38i,10n,43p,886b,336s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2015/texmf-dist/fonts
-/enc/dvips/cm-super/cm-super-t1.enc}</usr/local/texlive/2015/texmf-dist/fonts/t
-ype1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2015/texmf-dist/fonts/ty
-pe1/public/amsfonts/cm/cmmi5.pfb></usr/local/texlive/2015/texmf-dist/fonts/type
-1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/pu
-blic/amsfonts/cm/cmr5.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/publi
-c/amsfonts/cm/cmr7.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/a
-msfonts/cm/cmsy10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/cm
--super/sfbx1000.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/cm-s
-uper/sfbx1440.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/cm-sup
-er/sfrm0800.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/cm-super
-/sfrm1000.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/cm-super/s
-frm1200.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/cm-super/sfr
-m1728.pfb>
-Output written on "Week4 Report .pdf" (6 pages, 2367764 bytes).
+{/usr/local/texlive/2015/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}<
+/usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></
+usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></us
+r/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/
+local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/lo
+cal/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local
+/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/te
+xlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/tex
+live/2015/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb></usr/local/texli
+ve/2015/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive
+/2015/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/local/texlive/2
+015/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/201
+5/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2015/
+texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb>
+Output written on "Week4 Report .pdf" (5 pages, 1979217 bytes).
 PDF statistics:
- 99 PDF objects out of 1000 (max. 8388607)
- 55 compressed objects within 1 object stream
+ 94 PDF objects out of 1000 (max. 8388607)
+ 53 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 81 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 71 words of extra memory for PDF output out of 10000 (max. 10000000)
 
