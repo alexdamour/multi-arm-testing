@@ -11,8 +11,62 @@ source("PvalueFunction.R")
 source("RatioPower.R")
 ```
 
+##Pre-test: distribution 
+```{r}
+# Number of units 
+N = 10000
+# Number of treatments
+K = 10
+# Y_0 Null Effect
+Y0 = rep(0, K)
+sigk = rep(1, K)
+```
 
 ```{r}
+p_comb_min = compute_pcombine(Yk, sigk, N, K,"min", 10000)
+hist(p_comb_min, breaks = 100)
+
+p_comb_min2 = compute_pcombine(Yk, sigk, N, K,"min", 1000)
+hist(p_comb_min2, breaks = 100)
+```
+```{r}
+p_comb_mean = compute_pcombine(Yk, sigk, N, K,"mean", 10000)
+hist(p_comb_mean, breaks = 100)
+```
+
+```{r}
+p_comb_max = compute_pcombine(Yk, sigk, N, K,"max", 10000)
+hist(p_comb_max, breaks = 100)
+```
+
+```{r}
+p_comb_med = compute_pcombine(Yk, sigk, N, K,"median", 10000)
+hist(p_comb_med, breaks = 100)
+```
+
+
+# N
+
+
+```{r}
+N_step = 1000
+Yk = Y0 
+Yk[2] = 1 
+
+start.time = Sys.time()
+critical_ratio = NULL
+for (k in 1:10){
+  N = k * N_step
+  critical_ratio[k] = compute_binary_ctratio(Yk, N, k, 0.005)
+}
+
+# plot the critical ratio against the k treatments number
+plot(critical_ratio, type = "l", xlab = "K size", main = "Critical ratio value with N size" )
+
+end.time = Sys.time()
+time.taken_binaryctratio = end.time - start.time
+time.taken_binaryctratio
 
 ```
+
 
