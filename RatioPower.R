@@ -1,6 +1,6 @@
 # define a function that returns the power value given 
 # ratio r1 = y1/sig1 and ratio rk = sigk/sig1
-ratio_power = function(Y, r1, rk, N, K, compute_pcombine, compute_power, knum = 1, ktype = "homo", ptype = "min", power_rep = N){
+ratio_power = function(Y, r1, rk, N, K, compute_pcombine, compute_power, knum = 1, ktype = "homo", ptype = "min", power_rep = n, p_val_rep = 10000 ){
   # the treatment level y1
   y1 = Y[2]
   sig1 = y1/r1
@@ -30,11 +30,12 @@ ratio_power = function(Y, r1, rk, N, K, compute_pcombine, compute_power, knum = 
   power = NULL
   
   # get the experiment number to calculate power
-  R = power_rep/K
+  R = power_rep
   
   # derive the critical value p_cv for null hypothesis
-  p_cv = quantile(compute_pcombine(Y_null, sigk, N, K, ptype), 0.05)
-  # get the sparse effect 
+  p_cv = quantile(compute_pcombine(Y_null, sigk, N, K, ptype, n = 10000 ), 0.05)
+
+    # get the effect power
   for (j in 1:knum){
     power[j] = compute_power(Y, sigk, N, K, p_cv, ptype, R)
   }
@@ -77,6 +78,8 @@ sig_stat_gen = function(mean, K, ratio_type = "min", sig_type = "uniform"){
   return( list(rk_item = rk_item,  rk = rk) )
 }
 
+
+# function calculating the ratio given ratio r1 and rk
 power_ratio_test = function(Y, N, K, n_r1, n_rk, ktype = "homo", knum = 1, ratio_type, sig_type, ratio_rep = 50, step_r1 = 0.1, step_rk = 0.1){
   
   power_matrix= matrix(0, nrow = n_r1, ncol = n_rk)

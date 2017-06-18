@@ -11,8 +11,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Preliminary Work
 ```{r cars}
-# Set directory
-setwd("/Users/lxh/Desktop/MultiArmTestWorkingDirectory")
 # Function of computing p-value
 source("PvalueFunction.R")
 # Function of computing power
@@ -22,7 +20,7 @@ source("RatioPower.R")
 # Set Variables
 ```{r}
 # Number of units 
-n = 10000
+N = 10000
 # Number of treatments
 K = 10
 # Derive the given Y mean array 
@@ -41,7 +39,7 @@ n_rk = 100
 start.time = Sys.time()
 
 # Compute the power under the homoscedasticity case
-power_homo = power_ratio_test(Y, n, K, n_r1, n_rk)
+power_homo = power_ratio_test(Y, N, K, n_r1, n_rk)
 
 # Get the power matrix
 power_matrix_homo = power_homo$power_matrix
@@ -55,7 +53,7 @@ filled.contour(r1_homo, rk_homo, power_matrix_homo,
                  c("blue", "green", "yellow","orange", "red")),
                xlab="y1/sig1 ratio",ylab="sigk/sig1 ratio",
                main="Power given homoskedastic sigma",
-               key.title = title(main="Power"))
+               key.title = title(main="Power"),zlim = c(0,1))
 
 
 end.time = Sys.time()
@@ -82,7 +80,7 @@ filled.contour(r1_hetero, rk_hetero, power_matrix_hetero_sigln,
                  c("blue", "green", "yellow","orange", "red")),
                xlab="y1/sig1 ratio",ylab="sigk/sig1 ratio",
                main="Power given log normally distributed sigma",
-               key.title = title(main="Power"))
+               key.title = title(main="Power"), zlim = c(0,1))
 
 
 end.time = Sys.time()
@@ -116,7 +114,7 @@ filled.contour(r1_uni_min, rk_uni_min, power_matrix_uni_min,
                  c("blue", "green", "yellow","orange", "red")),
                xlab="y1/sig1 ratio",ylab="sigk/sig1 ratio",
                main="Power given uniform rk dist & min ratio",
-               key.title = title(main="Power"))
+               key.title = title(main="Power"),zlim = c(0,1))
 
 end.time = Sys.time()
 time.taken_min = end.time - start.time
@@ -140,7 +138,7 @@ filled.contour(r1_ln_min, rk_ln_min, power_matrix_ln_min,
                  c("blue", "green", "yellow","orange", "red")),
                xlab="y1/sig1 ratio",ylab="sigk/sig1 ratio",
                main="Power given log-normal rk dist & min ratio",
-               key.title = title(main="Power"))
+               key.title = title(main="Power"),zlim = c(0,1))
 
 end.time = Sys.time()
 time.taken_min = end.time - start.time
@@ -164,7 +162,7 @@ filled.contour(r1_ln_max, rk_ln_max, power_matrix_ln_max,
                  c("blue", "green", "yellow","orange", "red")),
                xlab="y1/sig1 ratio",ylab="sigk/sig1 ratio",
                main="Power given log-normal rk dist & max ratio",
-               key.title = title(main="Power"))
+               key.title = title(main="Power"),zlim = c(0,1))
 
 end.time = Sys.time()
 time.taken_min = end.time - start.time
@@ -191,7 +189,7 @@ filled.contour(r1_ln_med, rk_ln_med, power_matrix_ln_med,
                  c("blue", "green", "yellow","orange", "red")),
                xlab="y1/sig1 ratio",ylab="sigk/sig1 ratio",
                main="Power given log-normal rk dist & median ratio",
-               key.title = title(main="Power"))
+               key.title = title(main="Power"),zlim = c(0,1))
 
 end.time = Sys.time()
 time.taken_med_ln = end.time - start.time
@@ -217,7 +215,7 @@ filled.contour(r1_ln_mean, rk_ln_mean, power_matrix_ln_mean,
                  c("blue", "green", "yellow","orange", "red")),
                xlab="y1/sig1 ratio",ylab="sigk/sig1 ratio",
                main="Power given log-normal rk dist & mean ratio",
-               key.title = title(main="Power"))
+               key.title = title(main="Power"),zlim = c(0,1))
 
 
 end.time = Sys.time()
