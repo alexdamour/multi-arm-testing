@@ -70,3 +70,39 @@ time.taken_binaryctratio
 ```
 
 
+# N power
+```{r}
+K <- 10
+d1 <- 10
+d2 <- 5
+power_min2 <- matrix(0, nrow = d2, ncol = d1)
+power_med2 <- matrix(0, nrow = d2, ncol = d1)
+power_men2 <- matrix(0, nrow = d2, ncol = d1)
+for (i in 1:d2){
+  Y <- rep(0, K)
+  for (j in 1:d1){
+  Y[2] <- Y[2] + 1/d1
+  power_min2[i,j] = ratio_power(Y, 0.01, 1, N = 10^(i+1), K, compute_pcombine, compute_power, n = 1000, knum = 10)
+  power_med2[i,j] = ratio_power(Y, 0.01, 1, N = 10^(i+1), K, compute_pcombine, compute_power, n = 1000, knum = 10, ptype = "median")
+  power_men2[i,j] = ratio_power(Y, 0.01, 1, N = 10^(i+1), K, compute_pcombine, compute_power, n = 1000, knum = 10, ptype = "mean")
+  }
+}
+par(mfrow=c(1,3))
+plot(seq(0.1,1,0.1), power_min2[1,], type = "l", xlab = "Y1_value(min)", ylab = "power", col = 1, ylim = c(0,1))
+lines(seq(0.1,1,0.1), power_min2[2,], type = "l", col = 2)
+lines(seq(0.1,1,0.1), power_min2[3,], type = "l", col = 3)
+lines(seq(0.1,1,0.1), power_min2[4,], type = "l", col = 4)
+lines(seq(0.1,1,0.1), power_min2[5,], type = "l", col = 5)
+plot(seq(0.1,1,0.1), power_men2[1,], type = "l", xlab = "Y1_value(mean)", ylab = "power", col = 1, ylim = c(0,1))
+lines(seq(0.1,1,0.1), power_men2[2,], type = "l", col = 2)
+lines(seq(0.1,1,0.1), power_men2[3,], type = "l", col = 3)
+lines(seq(0.1,1,0.1), power_men2[4,], type = "l", col = 4)
+lines(seq(0.1,1,0.1), power_men2[5,], type = "l", col = 5)
+plot(seq(0.1,1,0.1), power_med2[1,], type = "l", xlab = "Y1_value(median)", ylab = "power", col = 1, ylim = c(0,1))
+lines(seq(0.1,1,0.1), power_med2[2,], type = "l", col = 2)
+lines(seq(0.1,1,0.1), power_med2[3,], type = "l", col = 3)
+lines(seq(0.1,1,0.1), power_med2[4,], type = "l", col = 4)
+lines(seq(0.1,1,0.1), power_med2[5,], type = "l", col = 5)
+legend("topright", c("N=100", "N=1000", "N=10000", "N=100000", "N=1000000"), col = c(1,2,3,4,5), lty=1)
+```
+
