@@ -59,7 +59,7 @@ compute_pcombine <- function(Yk, sigk, N, K, ptype, n =1000){
 
 
 ##Generate power function
-compute_power <- function(Yk, sigk, N, K, p_cv, ptype, R = 1000){
+compute_power <- function(Yk, sigk, N, K, p_cv, ptype = "min", R = 1000){
   # R denotes repeated experiment times for calculating power
   
   power = 0

@@ -33,7 +33,7 @@ ratio_power = function(Y, r1, rk, N, K, compute_pcombine, compute_power, knum = 
   R = power_rep
   
   # derive the critical value p_cv for null hypothesis
-  p_cv = quantile(compute_pcombine(Y_null, sigk, N, K, ptype, n = 10000 ), 0.05)
+  p_cv = quantile(compute_pcombine(Y_null, sigk, N, K, ptype, n = 1000 ), 0.05)
 
     # get the effect power
   for (j in 1:knum){

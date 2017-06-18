@@ -46,22 +46,21 @@ hist(p_comb_med, breaks = 100)
 
 
 # N
-
-
 ```{r}
 N_step = 1000
 Yk = Y0 
 Yk[2] = 1 
 
 start.time = Sys.time()
-critical_ratio = NULL
-for (k in 1:10){
-  N = k * N_step
-  critical_ratio[k] = compute_binary_ctratio(Yk, N, k, 0.005)
+
+p_cv = quantile(compute_pcombine(Y_null, sigk, N, K, ptype = "min", n = 10000 ), 0.05)
+
+power_sample = NULL
+for (k in 1:50){
+  power_sample[k] = compute_power(Y, sigk, N, K, p_cv)
 }
 
-# plot the critical ratio against the k treatments number
-plot(critical_ratio, type = "l", xlab = "K size", main = "Critical ratio value with N size" )
+hist(power_sample)
 
 end.time = Sys.time()
 time.taken_binaryctratio = end.time - start.time
