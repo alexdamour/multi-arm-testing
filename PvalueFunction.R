@@ -30,7 +30,7 @@ compute_pvalue = function(Yk, sigk, N, K, n = 1000){
 
 
 ##Generate p-combine function
-compute_pcombine <- function(Yk, sigk, N, K, ptype, n =1000){
+compute_pcombine <- function(Yk, sigk, N, K, ptype = "min", n =1000){
   # p-combined value array
   p_comb_val <- NULL
   pmatrix <- compute_pvalue(Yk, sigk, N, K, n)
@@ -132,4 +132,47 @@ compute_binary_ctratio = function(Y, N, K, delta, r1_start = 0, r1_step = 0.15, 
   }  
   return(critical)
 }
+
+##Multi-dimension Y generate function
+multi_y = function(epsilon, K){
+Ymv_temp <- rmvnorm(1, rep(0, K-1), diag(K-1))
+Ymv <- c(0, Ymv_temp)
+Ynorm <- Ymv * epsilon / sqrt(sum(Ymv^2))
+return(Ynorm)
+}
+
+##Binary level calculation 
+compute_binary_level = function(Y, sigk, N, K, delta, p_cv, eps_start = 0, eps_ceil = 1, eps_rep = 100, power_rep = 100, ptype = "min" ){
+
+  # the iteration value
+  critical = (eps_start + eps_ceil)/2
+  
+  power_exp = NULL
+  for (exp in 1:eps_rep){
+    Y_e = multi_y(critical, K)
+    power_exp[exp] = compute_power(Y_e, sigk, N, K, p_cv, ptype = ptype, R = power_rep)
+  }
+  power = mean(power_exp)
+  
+  # control for the difference
+  diff = abs(power - 0.8)
+  
+  while (diff > delta) {
+    print(diff)
+    print(power)
+    print(critical)
+    if (power < 0.8 ){
+      return(compute_binary_level(Y, sigk, N, K, delta = delta, p_cv = p_cv, eps_start = critical, eps_ceil = eps_ceil))
+    }else{
+      if (power > 0.8){
+        return(compute_binary_level(Y, sigk, N, K, delta = delta, p_cv = p_cv,eps_start = eps_start, eps_ceil = critical))
+      }else{
+        print("Error: does not exists")
+        }
+      }   
+    }
+  return(critical)
+}
+
+
 

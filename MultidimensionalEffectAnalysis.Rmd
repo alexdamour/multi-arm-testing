@@ -7,6 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(mvtnorm)
 source("PvalueFunction.R")
 source("RatioPower.R")
 ```
@@ -18,9 +19,12 @@ N = 10000
 # Number of treatments
 K = 10
 # Y_0 Null Effect
-Y0 = rep(0, K)
+Y_null = rep(0, K)
 sigk = rep(1, K)
+
 ```
+
+
 
 ```{r}
 p_comb_min = compute_pcombine(Yk, sigk, N, K,"min", 10000)
@@ -47,20 +51,33 @@ hist(p_comb_med, breaks = 100)
 
 # N
 ```{r}
-N_step = 1000
 Yk = Y0 
-Yk[2] = 1 
+Yk[2] = 0.1 
 
 start.time = Sys.time()
 
 p_cv = quantile(compute_pcombine(Y_null, sigk, N, K, ptype = "min", n = 10000 ), 0.05)
 
-power_sample = NULL
-for (k in 1:50){
-  power_sample[k] = compute_power(Y, sigk, N, K, p_cv)
-}
+power_sample_100 = NULL
+power_sample_1000 = NULL
+power_sample_10000 = NULL
 
-hist(power_sample)
+for (exp in 1:50){
+  power_sample_100[exp] = compute_power(Yk, sigk, N, K, p_cv, R = 100)
+  power_sample_1000[exp] = compute_power(Yk, sigk, N, K, p_cv, R = 1000)
+  power_sample_10000[exp] = compute_power(Yk, sigk, N, K, p_cv, R = 10000)
+}
+hist(power_sample_100)
+hist(power_sample_1000)
+hist(power_sample_10000)
+
+mean(power_sample_100)
+mean(power_sample_1000)
+mean(power_sample_10000)
+
+var(power_sample_100)
+var(power_sample_1000)
+var(power_sample_10000)
 
 end.time = Sys.time()
 time.taken_binaryctratio = end.time - start.time
@@ -104,4 +121,63 @@ lines(seq(0.1,1,0.1), power_med2[4,], type = "l", col = 4)
 lines(seq(0.1,1,0.1), power_med2[5,], type = "l", col = 5)
 legend("topright", c("N=100", "N=1000", "N=10000", "N=100000", "N=1000000"), col = c(1,2,3,4,5), lty=1)
 ```
+
+
+```{r}
+power_mv_min <- NULL
+power_mv_med <- NULL
+power_mv_men <- NULL
+for (i in 1:100){
+ epsilon <- 0.01*i
+ Ymv_temp <- rmvnorm(1, rep(0, K-1), diag(K-1))
+ Ymv <- c(0, Ymv_temp)
+ Ynorm <- Ymv * epsilon / sqrt(sum(Ymv^2))
+ power_mv_min[i] <- ratio_power(Ynorm, Ynorm[2], 1, N, K, compute_pcombine, compute_power, knum = 10)
+ power_mv_med[i] <- ratio_power(Ynorm, Ynorm[2], 1, N, K, compute_pcombine, compute_power, knum = 10, ptype = "median") 
+ power_mv_men[i] <- ratio_power(Ynorm, Ynorm[2], 1, N, K, compute_pcombine, compute_power, knum = 10, ptype = "mean") 
+}
+plot(seq(0.01,1,0.01), power_mv_min, type = "l", xlab = "epsilon", ylab = "power", col = 1, ylim = c(0,1))
+lines(seq(0.01,1,0.01), power_mv_med, type = "l", xlab = "epsilon", ylab = "power", col = 2, ylim = c(0,1))
+
+```
+
+
+```{r}
+epsilon = 0.1
+power_sample = NULL
+p_cv = quantile(compute_pcombine(Y_null, sigk, N, K, ptype = "min", n = 10000 ), 0.05)
+
+for (exp in 1:100){
+  Y_1 = multi_y(epsilon, K)
+  power_sample[exp] = compute_power(Y_1, sigk, N, K, p_cv, R = 100)
+}
+
+hist(power_sample)
+var(power_sample)
+mean(power_sample)
+```
+
+```{r}
+compute_binary_level(Y, sigk, N, K, delta = 0.005, p_cv = p_cv)
+```
+
+
+```{r}
+delta = 0.005
+
+level_eps = NULL
+
+for (k in 2:100){
+  Yk = rep(0, k)
+  sigk = rep(1, k)
+  p_cvk = p_cv = quantile(compute_pcombine(Yk, sigk, N, k, n = 10000 ), 0.05)
+  level_eps[k] = compute_binary_level(Y, sigk, N, k, eps_ceil = 2, delta, p_cv = p_cvk)
+} 
+
+plot(level_eps, type = "l")
+```
+
+
+
+
 
