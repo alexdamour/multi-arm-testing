@@ -8,6 +8,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(mvtnorm)
+library(reshape2)
 source("PvalueFunction.R")
 source("RatioPower.R")
 ```
@@ -158,6 +159,15 @@ mean(power_sample)
 ```
 
 ```{r}
+power_sample =data.frame(power_sample = power_sample)
+ggplot(power_sample, aes(x = power_sample)) + geom_histogram(fill = 'blue', alpha = 0.4, position = "identity") + ggtitle("Power histogram given fixed epsilon 0.1 with 100 repetition times") + annotate("text", x = 0.35, y = 10, label = "Variance is 0.00179")
+```
+
+
+
+
+
+```{r}
 compute_binary_level(Y, sigk, N, K, delta = 0.005, p_cv = p_cv)
 ```
 
@@ -174,10 +184,119 @@ for (k in 2:100){
   level_eps[k] = compute_binary_level(Y, sigk, N, k, eps_ceil = 2, delta, p_cv = p_cvk)
 } 
 
-plot(level_eps, type = "l")
+```
+
+```{r}
+level_eps = level_eps[-1]
+k = seq(2,100,1)
+fit = lm(level_eps ~ k)$fitted
+summary(lm(level_eps ~ k))
+
+data_eps = data.frame(eps = level_eps, k = k, fit = fit)
+ggplot(data_eps) + geom_point(aes(x = k, y = eps, colour = eps), position = 'jitter') + geom_line(aes(x = k, y = fit)) + labs(x = "treatment size K", y ="critical epsilon") + ggtitle("Power curve of Mean type given different total units number") + annotate("text", x = 80, y = 0.25, label = "R squared is 0.999")
 ```
 
 
 
+#mean median case
+```{r}
+N = c(1000, 5000, 10000, 50000, 100000, 500000, 1000000)
+n_level = 7
+n_step = 100
+
+K = 10
+sigk = rep(1, K)
+Yk = rep(0, K)
+
+power_mean = matrix(0, nrow = n_level, ncol = n_step)
+power_med = matrix(0, nrow = n_level, ncol = n_step)
+
+for (r in 1:n_level){
+  # setting the total unit
+  N_i = N[r]
+  p_cv_mean_r = quantile(compute_pcombine(Yk, sigk, N_i, K, ptype = "mean", n = 10000 ), 0.05)
+  p_cv_med_r = quantile(compute_pcombine(Yk, sigk, N_i, K, ptype = "median", n = 10000 ), 0.05)
+  for (i in 1:n_step){
+    eps_i = i * 1/n_step
+    
+    # calculate the power by repetition
+    power_mean_sample = NULL
+    power_med_sample = NULL
+    
+    for (exp in 1:100){
+      Y_1 = multi_y(eps_i, K)
+      power_mean_sample[exp] = compute_power(Y_1, sigk, N_i, K, p_cv_mean_r, ptype = "mean", R = 1000)
+      power_med_sample[exp] = compute_power(Y_1, sigk, N_i, K, p_cv_med_r, ptype = "median", R = 1000)
+    }
+    power_mean[r,i] = mean(power_mean_sample)
+    power_med[r,i] = mean(power_med_sample)
+  }
+}
+
+```
+
+
+```{r}
+data_mean = data.frame(t(power_mean), epsilon = seq(0.01,1,0.01))
+colnames(data_mean) = c("N = 1000", "N = 5000", "N = 10000", "N = 50000", "N = 100000", "N = 500000", "N = 1000000", "epsilon")
+data_mean = melt(data_mean, id = c("epsilon"))
+
+```
+
+```{r}
+ggplot(data_mean, aes(x = epsilon, y = value, color = variable)) + geom_line() + labs(x = "epsilon value", y ="power") + ggtitle("Power curve of Mean type given different total units number")
+```
+
+
+```{r}
+data_med = data.frame(t(power_med), epsilon = seq(0.01,1,0.01))
+colnames(data_med) = c("N = 1000", "N = 5000", "N = 10000", "N = 50000", "N = 100000", "N = 500000", "N = 1000000", "epsilon")
+data_med = melt(data_med, id = c("epsilon"))
+```
+
+```{r}
+ggplot(data_med, aes(x = epsilon, y = value, color = variable)) + geom_line() + labs(x = "epsilon value", y ="power") + ggtitle("Power curve of Median type given different total units number")
+```
+
+```{r}
+start.time = Sys.time()
+
+n_step = 150
+
+power_min = matrix(0, nrow = n_level, ncol = n_step)
+
+for (r in 1:n_level){
+  # setting the total unit
+  N_i = N[r]
+  p_cv_min_r = quantile(compute_pcombine(Yk, sigk, N_i, K, ptype = "min", n = 10000 ), 0.05)
+
+  for (i in 1:n_step){
+    eps_i = i * 1.5/n_step
+    
+    # calculate the power by repetition
+    power_min_sample = NULL
+    
+    for (exp in 1:200){
+      Y_1 = multi_y(eps_i, K)
+      power_min_sample[exp] = compute_power(Y_1, sigk, N_i, K, p_cv_min_r, ptype = "min", R = 2000)
+    }
+    power_min[r,i] = mean(power_min_sample)
+  }
+}
+
+end.time = Sys.time()
+time.taken_binaryctratio = end.time - start.time
+time.taken_binaryctratio
+```
+
+```{r}
+data_min = data.frame(t(power_min), epsilon = seq(0.01,1.5,0.01))
+colnames(data_min) = c("N = 1000", "N = 5000", "N = 10000", "N = 50000", "N = 100000", "N = 500000", "N = 1000000", "epsilon")
+data_min = melt(data_min, id = c("epsilon"))
+```
+
+```{r}
+ggplot(data_min, aes(x = epsilon, y = value, color = variable)) + geom_line() + scale_x_continuous(limits = c(0,1))  +labs(x = "epsilon value", y ="power") + ggtitle("Power curve of Minimal type given different total units number") 
+```
 
 
