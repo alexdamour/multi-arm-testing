@@ -141,6 +141,7 @@ Ynorm <- Ymv * epsilon / sqrt(sum(Ymv^2))
 return(Ynorm)
 }
 
+
 ##Binary level calculation 
 compute_binary_level = function(Y, sigk, N, K, delta, p_cv, eps_start = 0, eps_ceil = 1, eps_rep = 100, power_rep = 100, ptype = "min" ){
 
