@@ -1,7 +1,7 @@
 #Fundamental Simulation Function
 ##Generate p-value function
 compute_pvalue = function(Yk, sigk, N, K, n = 1000){
-  nk = N/k # assume evenly distributed number of subgroups nk
+  nk = N/K # assume evenly distributed number of subgroups nk
   # initialize the parameters
   tao = NULL # causal estimand
   Yob = NULL
@@ -12,7 +12,7 @@ compute_pvalue = function(Yk, sigk, N, K, n = 1000){
   p = matrix(0, ncol = K, nrow = n)
   # gen YK obs 
   for (j in 1:n){
-    for (i in 1:K){ 
+    for (i in 1: K){ 
       # derive the sample mean and sample variance 
       Yob[i] = rnorm(1, Yk[i], sigk[i] * sqrt(K/N))
       sig[i] = sigk[i] * rchisq(1, nk - 1) / (nk - 1)
@@ -161,15 +161,12 @@ compute_binary_level = function(Y, sigk, N, K, delta, p_cv, eps_start = 0, eps_c
     print(diff)
     print(power)
     print(critical)
+    
     if (power < 0.8 ){
-      return(compute_binary_level(Y, sigk, N, K, delta = delta, p_cv = p_cv, eps_start = critical, eps_ceil = eps_ceil))
-    }else{
-      if (power > 0.8){
-        return(compute_binary_level(Y, sigk, N, K, delta = delta, p_cv = p_cv,eps_start = eps_start, eps_ceil = critical))
-      }else{
-        print("Error: does not exists")
+      return(compute_binary_level(Y, sigk, N, K, delta = delta, p_cv = p_cv, eps_start = critical, eps_ceil = eps_ceil, ptype = ptype))
+    }else if (power >= 0.8){
+        return(compute_binary_level(Y, sigk, N, K, delta = delta, p_cv = p_cv,eps_start = eps_start, eps_ceil = critical, ptype = ptype))
         }
-      }   
     }
   return(critical)
 }

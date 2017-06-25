@@ -28,7 +28,7 @@ sigk = rep(1, K)
 
 
 ```{r}
-p_comb_min = compute_pcombine(Yk, sigk, N, K,"min", 10000)
+p_comb_min = compute_pcombine(Yk, sigk, N, K,"min", 100)
 hist(p_comb_min, breaks = 100)
 
 p_comb_min2 = compute_pcombine(Yk, sigk, N, K,"min", 1000)
@@ -193,7 +193,7 @@ fit = lm(level_eps ~ k)$fitted
 summary(lm(level_eps ~ k))
 
 data_eps = data.frame(eps = level_eps, k = k, fit = fit)
-ggplot(data_eps) + geom_point(aes(x = k, y = eps, colour = eps), position = 'jitter') + geom_line(aes(x = k, y = fit)) + labs(x = "treatment size K", y ="critical epsilon") + ggtitle("Power curve of Mean type given different total units number") + annotate("text", x = 80, y = 0.25, label = "R squared is 0.999")
+ggplot(data_eps) + geom_point(aes(x = k, y = eps, colour = eps), position = 'jitter') + geom_line(aes(x = k, y = fit)) + labs(x = "treatment size K", y ="critical epsilon") + ggtitle("Power curve of Min type given different total units number") + annotate("text", x = 80, y = 0.25, label = "R squared is 0.999")
 ```
 
 
@@ -297,6 +297,232 @@ data_min = melt(data_min, id = c("epsilon"))
 
 ```{r}
 ggplot(data_min, aes(x = epsilon, y = value, color = variable)) + geom_line() + scale_x_continuous(limits = c(0,1))  +labs(x = "epsilon value", y ="power") + ggtitle("Power curve of Minimal type given different total units number") 
+```
+
+```{r}
+start.time = Sys.time()
+
+N = c(1000, 5000, 10000, 50000, 100000, 500000, 1000000)
+n_level = 7
+n_step = 150
+
+power_max = matrix(0, nrow = n_level, ncol = n_step)
+
+for (r in 1:n_level){
+  # setting the total unit
+  N_i = N[r]
+  p_cv_max_r = quantile(compute_pcombine(Yk, sigk, N_i, K, ptype = "max", n = 10000 ), 0.05)
+
+  for (i in 1:n_step){
+    eps_i = i * 1.5/n_step
+    
+    # calculate the power by repetition
+    power_max_sample = NULL
+    
+    for (exp in 1:100){
+      Y_1 = multi_y(eps_i, K)
+      power_max_sample[exp] = compute_power(Y_1, sigk, N_i, K, p_cv_min_r, ptype = "max", R = 1000)
+    }
+    power_max[r,i] = mean(power_max_sample)
+  }
+}
+
+end.time = Sys.time()
+time.taken_binaryctratio = end.time - start.time
+time.taken_binaryctratio
+```
+
+```{r}
+data_max = data.frame(t(power_max), epsilon = seq(0.01,1.5,0.01))
+colnames(data_max) = c("N = 1000", "N = 5000", "N = 10000", "N = 50000", "N = 100000", "N = 500000", "N = 1000000", "epsilon")
+data_max = melt(data_max, id = c("epsilon"))
+```
+
+```{r}
+ggplot(data_max, aes(x = epsilon, y = value, color = variable)) + geom_line() + scale_x_continuous(limits = c(0,1))  +labs(x = "epsilon value", y ="power") + ggtitle("Power curve of Maximal type given different total units number") 
+```
+
+```{r}
+delta = 0.005
+
+level_eps_med = NULL
+
+for (k in 2:100){
+  Yk = rep(0, k)
+  sigk = rep(1, k)
+  p_cvmed = quantile(compute_pcombine(Yk, sigk, N, k, ptype = "median", n = 10000 ), 0.05)
+  level_eps_med[k] = compute_binary_level(Y, sigk, N, k, eps_start = 0, eps_ceil = 4, delta, p_cv = p_cvmed, eps_rep = 200, ptype = "median")
+}
+
+```
+
+```{r}
+plot(level_eps_men, type = "l")
+lines(level_eps_med, col ="green")
+lines(level_eps, col = "blue")
+```
+
+
+
+
+```{r}
+level_eps_men = NULL
+
+for (k in 2:100){
+  Yk = rep(0, k)
+  sigk = rep(1, k)
+  p_cvmen = quantile(compute_pcombine(Yk, sigk, N, k, ptype = "mean", n = 10000 ), 0.05)
+  level_eps_men[k] = compute_binary_level(Y, sigk, N, k, eps_start = 0, eps_ceil = 4, delta, p_cv = p_cvmen, eps_rep = 200, ptype = "mean")  
+}
+```
+
+
+
+
+
+
+```{r}
+eps = 0.1
+power_med_k = NULL
+power_men_k = NULL
+
+eps_rep = 100
+
+for (k in 2:100){
+  Yk = rep(0, k)
+  sigk = rep(1, k)
+  
+  p_cvmed = quantile(compute_pcombine(Yk, sigk, N, k, ptype = "median", n = 10000 ), 0.05)
+  p_cvmen = quantile(compute_pcombine(Yk, sigk, N, k, ptype = "mean", n = 10000 ), 0.05)
+  
+  power_med_exp = NULL
+  power_men_exp = NULL
+    
+  for (exp in 1:eps_rep){
+    Y_e = multi_y(eps, k)
+    power_med_exp[exp] = compute_power(Y_e, sigk, N, k, p_cvmed, ptype = "median", R = 2000)
+    power_men_exp[exp] = compute_power(Y_e, sigk, N, k, p_cvmen, ptype = "mean", R = 2000)
+  }
+  
+  power_med_k[k] = mean(power_med_exp)
+  power_men_k[k] = mean(power_men_exp)
+} 
+
+```
+
+```{r}
+plot(power_med_k, type = "l", main = "Power of median type combined p-value against K size given epsion = 0.1", xlab = "K treatment size", ylab = "Power")
+```
+
+```{r}
+plot(power_men_k, type = "l", main = "Power of mean type combined p-value against K size given epsion = 0.1", xlab = "K treatment size", ylab = "Power")
+```
+
+```{r}
+start.time = Sys.time()
+K_small = 2
+K_large = 20
+
+Yk_s = rep(0, K_small)
+Yk_l = rep(0, K_large)
+
+sigk_s = rep(1, K_small)
+sigk_l = rep(1, K_large)
+
+eps_step = 100
+
+# power
+power_min_eps_s = NULL
+power_med_eps_s = NULL
+power_men_eps_s = NULL
+
+power_min_eps_l = NULL
+power_med_eps_l = NULL
+power_men_eps_l = NULL
+
+# critical rejected p-value
+p_cvmin_small = quantile(compute_pcombine(Yk_s, sigk_s, N, K_small, ptype = "min", n = 10000 ),0.05)
+p_cvmed_small = quantile(compute_pcombine(Yk_s, sigk_s, N, K_small, ptype = "median", n = 10000 ),0.05)
+p_cvmen_small = quantile(compute_pcombine(Yk_s, sigk_s, N, K_small, ptype = "mean", n = 10000 ), 0.05)
+p_cvmin_large = quantile(compute_pcombine(Yk_l, sigk_l, N, K_large, ptype = "min", n = 10000 ),0.05)
+p_cvmed_large = quantile(compute_pcombine(Yk_l, sigk_l, N, K_large, ptype = "median", n = 10000 ),0.05)
+p_cvmen_large = quantile(compute_pcombine(Yk_l, sigk_l, N, K_large, ptype = "mean", n = 10000 ), 0.05)
+
+for (i in 1:eps_step){
+  eps_i = i*1/eps_step
+
+  power_min_exp_s = NULL
+  power_med_exp_s = NULL
+  power_men_exp_s = NULL
+  power_min_exp_l = NULL
+  power_med_exp_l = NULL
+  power_men_exp_l = NULL
+    
+  for (exp in 1:eps_rep){
+    # small K case
+    Y_e_small = multi_y(eps_i, K_small)
+
+    power_min_exp_s[exp] = compute_power(Y_e_small, sigk_s, N, K_small, p_cvmin_small, ptype = "min", R = 2000)
+    power_med_exp_s[exp] = compute_power(Y_e_small, sigk_s, N, K_small, p_cvmed_small, ptype = "median", R = 2000)
+    power_men_exp_s[exp] = compute_power(Y_e_small, sigk_s, N, K_small, p_cvmen_small, ptype = "mean", R = 2000)
+    
+    # large K case
+    Y_e_large = multi_y(eps_i, K_large)
+
+    power_min_exp_l[exp] = compute_power(Y_e_large, sigk_l, N, K_large, p_cvmin_large, ptype = "min", R = 2000)
+    power_med_exp_l[exp] = compute_power(Y_e_large, sigk_l, N, K_large, p_cvmed_large, ptype="median", R = 2000)
+    power_men_exp_l[exp] = compute_power(Y_e_large, sigk_l, N, K_large, p_cvmen_large, ptype = "mean", R = 2000)
+    
+  }
+  power_min_eps_s[i] = mean(power_med_exp_s)
+  power_med_eps_s[i] = mean(power_med_exp_s)
+  power_men_eps_s[i] = mean(power_men_exp_s)
+  
+  
+  power_min_eps_l[i] = mean(power_med_exp_l)
+  power_med_eps_l[i] = mean(power_med_exp_l)
+  power_men_eps_l[i] = mean(power_men_exp_l)
+}
+
+end.time = Sys.time()
+time.taken_binaryctratio = end.time - start.time
+time.taken_binaryctratio
+```
+
+
+```{r}
+plot(power_min_eps_l, type = "l")
+plot(power_med_eps_l, col = "green")
+plot(power_men_eps_l, col = "blue")
+```
+
+```{r}
+eps_level = 0.1
+N_step = 1000
+K = 10
+sigk = rep(0, K)
+
+
+
+for (j in 1:100){
+  N_j = 1000 * j
+  for (exp in 1:eps_rep){
+    power_min_exp =NULL
+    power_med_exp = NULL
+    power_men_exp = NULL
+    
+    Y_e = multi_y(eps_level, K)
+
+    power_min_exp[exp] = compute_power(Y_e, sigk, N_j, K, p_cvmin_small, ptype = "min", R = 2000)
+    power_med_exp[exp] = compute_power(Y_e, sigk, N_j, K, p_cvmed_small, ptype = "median", R = 2000)
+    power_men_exp[exp] = compute_power(Y_e, sigk, N_j, K, p_cvmen_small, ptype = "mean", R = 2000)
+  }
+  
+  power_min_N = mean(power_min_exp)
+  power_med_N = mean(power_med_exp)
+  power_men_N = mean(power_men_exp)
+}
+
 ```
 
 
