@@ -73,7 +73,7 @@ for (i in 1:d){ # Treatment level
 plot(seq(0.01,1,0.01), power_1, type = "l", xlab = "Epsilon", ylab = "Power")
 lines(seq(0.015,1.5,0.015), power_2, type = "l", col = "blue")
 lines(seq(0.02,2,0.02), power_3, type = "l", col = "red")
-legend("bottomright", c("Y", "1.5Y", "2Y"), col = c("black","blue","red"), lty = 1)
+legend("bottomright", c("Epsilon", "1.5Epsilon", "2Epsilon"), col = c("black","blue","red"), lty = 1)
 ```
 
 
