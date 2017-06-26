@@ -13,17 +13,26 @@ source("PvalueFunction.R")
 source("RatioPower.R")
 ```
 
-
+# Check Y_max
 ```{r}
 eps_level = 1
+Y_i_exp <- NULL
+Y_max <- NULL
 for (i in 2:100){ # Treatment level
   K_i = i
   for (exp in 1:500){
     Y_exp = multi_y(eps_level, K_i)
     Y_i_exp[exp] = max(Y_exp)
-  Y_i = mean(Y_i_exp)
   }
-  Y_max[i] = Y_i
+  Y_max[i] = mean(Y_i_exp)
 }
+plot(Y_max, type = "l", ylim = c(0,1), ylab = "Y_max")
+```
+
+```{r}
+K_max <- c(2:100)
+K_max_ln <- log(K_max, base = exp(1))
+lm_max <- lm(Y_max[2:100] ~ K_max_ln) # epsilon = 1
+summary(lm_max)
 ```
 
