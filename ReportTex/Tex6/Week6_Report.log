@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  26 JUN 2017 22:38
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  27 JUN 2017 11:19
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -331,11 +331,11 @@ e
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-<N.jpeg, id=1, 2786.41pt x 1720.4275pt>
+<N.jpeg, id=1, 2694.065pt x 1664.2175pt>
 File: N.jpeg Graphic file (type jpg)
  <use N.jpeg>
 Package pdftex.def Info: N.jpeg used on input line 49.
-(pdftex.def)             Requested size: 433.58978pt x 289.08235pt.
+(pdftex.def)             Requested size: 433.60791pt x 289.08394pt.
 
 <max.png, id=2, 684.5575pt x 417.56pt>
 File: max.png Graphic file (type png)
@@ -419,7 +419,7 @@ nts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2016/texmf-dist/font
 s/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2016/texmf-dist/fonts/
 type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2016/texmf-dist/fonts/ty
 pe1/public/cm-super/sfrm1728.pfb>
-Output written on Week6_Report.pdf (4 pages, 659840 bytes).
+Output written on Week6_Report.pdf (4 pages, 707860 bytes).
 PDF statistics:
  67 PDF objects out of 1000 (max. 8388607)
  42 compressed objects within 1 object stream
