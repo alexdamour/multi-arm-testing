@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  26 JUN 2017 12:40
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  26 JUN 2017 22:38
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -331,73 +331,98 @@ e
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-<scale.png, id=1, 695.59875pt x 424.58624pt>
-File: scale.png Graphic file (type png)
- <use scale.png>
-Package pdftex.def Info: scale.png used on input line 49.
-(pdftex.def)             Requested size: 433.61246pt x 289.09059pt.
-
-<N.jpeg, id=3, 2786.41pt x 1720.4275pt>
+<N.jpeg, id=1, 2786.41pt x 1720.4275pt>
 File: N.jpeg Graphic file (type jpg)
  <use N.jpeg>
-Package pdftex.def Info: N.jpeg used on input line 58.
-(pdftex.def)             Requested size: 325.2136pt x 216.7855pt.
- [1
-
-{/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./scale
-.png>]
-<max.png, id=18, 684.5575pt x 417.56pt>
-File: max.png Graphic file (type png)
- <use max.png>
-Package pdftex.def Info: max.png used on input line 67.
-(pdftex.def)             Requested size: 325.22041pt x 216.81386pt.
-
-<sqrt.png, id=19, 477.785pt x 379.4175pt>
-File: sqrt.png Graphic file (type png)
- <use sqrt.png>
-Package pdftex.def Info: sqrt.png used on input line 73.
-(pdftex.def)             Requested size: 289.07904pt x 216.81442pt.
-
-<ln.png, id=20, 515.9275pt x 320.19624pt>
-File: ln.png Graphic file (type png)
- <use ln.png>
-Package pdftex.def Info: ln.png used on input line 79.
-(pdftex.def)             Requested size: 289.09062pt x 216.81203pt.
- [2 <./N.jpeg> <./max.png>] <cr.jpeg, id=27, 2786.41pt x 1720.4275pt>
-File: cr.jpeg Graphic file (type jpg)
- <use cr.jpeg>
-Package pdftex.def Info: cr.jpeg used on input line 88.
+Package pdftex.def Info: N.jpeg used on input line 49.
 (pdftex.def)             Requested size: 433.58978pt x 289.08235pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 86--94
+<max.png, id=2, 684.5575pt x 417.56pt>
+File: max.png Graphic file (type png)
+ <use max.png>
+Package pdftex.def Info: max.png used on input line 58.
+(pdftex.def)             Requested size: 325.22041pt x 216.81386pt.
+
+<sqrt.png, id=4, 477.785pt x 379.4175pt>
+File: sqrt.png Graphic file (type png)
+ <use sqrt.png>
+Package pdftex.def Info: sqrt.png used on input line 64.
+(pdftex.def)             Requested size: 289.07904pt x 216.81442pt.
+
+<ln.png, id=5, 515.9275pt x 320.19624pt>
+File: ln.png Graphic file (type png)
+ <use ln.png>
+Package pdftex.def Info: ln.png used on input line 70.
+(pdftex.def)             Requested size: 289.09062pt x 216.81203pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 56--80
 
  []
 
-[3 <./sqrt.png> <./ln.png>] [4 <./cr.jpeg>] (./Week6_Report.aux) ) 
+
+Underfull \hbox (badness 10000) in paragraph at lines 56--80
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 56--80
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 56--80
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 56--80
+
+ []
+
+[1
+
+{/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./N.jpe
+g>] [2 <./max.png> <./sqrt.png>] <cr.jpeg, id=26, 2694.065pt x 1664.2175pt>
+File: cr.jpeg Graphic file (type jpg)
+
+<use cr.jpeg>
+Package pdftex.def Info: cr.jpeg used on input line 84.
+(pdftex.def)             Requested size: 361.33992pt x 245.7112pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 82--92
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 82--92
+
+ []
+
+[3 <./ln.png> <./cr.jpeg>] [4] (./Week6_Report.aux) ) 
 Here is how much of TeX's memory you used:
- 3672 strings out of 493014
- 48721 string characters out of 6133351
- 123053 words of memory out of 5000000
- 7144 multiletter control sequences out of 15000+600000
+ 3667 strings out of 493014
+ 48657 string characters out of 6133351
+ 126053 words of memory out of 5000000
+ 7140 multiletter control sequences out of 15000+600000
  12479 words of font info for 37 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 38i,7n,43p,481b,247s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/t
-exlive/2016/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/local/tex
-live/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texl
-ive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texli
-ve/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive
-/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2
-016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2016
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2016/
-texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2016/te
-xmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2016/texm
-f-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2016/texmf-
-dist/fonts/type1/public/cm-super/sfrm1728.pfb>
-Output written on Week6_Report.pdf (4 pages, 616128 bytes).
+ 38i,7n,43p,483b,245s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2016/t
+exmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/local/texlive/2016/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2016/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2016/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2016/texmf-d
+ist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2016/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2016/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2016/texmf-dist/fo
+nts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2016/texmf-dist/font
+s/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2016/texmf-dist/fonts/
+type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2016/texmf-dist/fonts/ty
+pe1/public/cm-super/sfrm1728.pfb>
+Output written on Week6_Report.pdf (4 pages, 659840 bytes).
 PDF statistics:
- 69 PDF objects out of 1000 (max. 8388607)
+ 67 PDF objects out of 1000 (max. 8388607)
  42 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 31 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 26 words of extra memory for PDF output out of 10000 (max. 10000000)
 

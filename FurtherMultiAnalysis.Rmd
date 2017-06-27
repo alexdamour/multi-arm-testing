@@ -26,12 +26,15 @@ for (i in 2:100){ # Treatment level
   }
   Y_max[i] = mean(Y_i_exp)
 }
-plot(Y_max, type = "l", ylim = c(0,1), ylab = "Y_max")
+plot(Y_max, type = "l", ylim = c(0,1), ylab = "Y_max", xlab = "K")
 ```
 
 # Fitting
 ```{r}
 K_max <- c(2:100)
+lm_sqrt <- lm(Y_max[2:100] ~ 1/sqrt(K_max))
+summary(lm_sqrt)
+summary(lm_sqrt)[c("r.squared", "adj.r.squared")]
 K_max_ln <- log(K_max, base = exp(1))
 lm_max <- lm(Y_max[2:100] ~ K_max_ln) # epsilon = 1
 summary(lm_max)
@@ -44,7 +47,9 @@ K <- 10
 d <- 100
 sigk <- rep(1, K)
 Yk <- rep(0, K)
-p_cv <- quantile(compute_pcombine(Yk, sigk, N, K, n = 10000 ) ,0.05)
+p_cv1 <- quantile(compute_pcombine(Yk, sigk, N, K, n = 10000 ) ,0.05)
+p_cv2 <- quantile(compute_pcombine(Yk, 1.5*sigk, N, K, n = 10000 ) ,0.05)
+p_cv3 <- quantile(compute_pcombine(Yk, 2*sigk, N, K, n = 10000 ) ,0.05)
 eps1 <- 0
 eps2 <- 0
 eps3 <- 0
@@ -62,9 +67,9 @@ for (i in 1:d){ # Treatment level
     Y_exp1 <- multi_y(eps1, K)
     Y_exp2 <- multi_y(eps2, K)
     Y_exp3 <- multi_y(eps3, K)
-    power_exp1[j] <- compute_power(Y_exp1, sigk, N, K, p_cv, R = 2000)
-    power_exp2[j] <- compute_power(Y_exp2, sigk, N, K, p_cv, R = 2000)
-    power_exp3[j] <- compute_power(Y_exp3, sigk, N, K, p_cv, R = 2000)
+    power_exp1[j] <- compute_power(Y_exp1, sigk, N, K, p_cv1, R = 2000)
+    power_exp2[j] <- compute_power(Y_exp2, 1.5*sigk, N, K, p_cv2, R = 2000)
+    power_exp3[j] <- compute_power(Y_exp3, 2*sigk, N, K, p_cv3, R = 2000)
   }
   power_1[i] <- mean(power_exp1) 
   power_2[i] <- mean(power_exp2)
