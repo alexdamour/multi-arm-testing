@@ -1,0 +1,175 @@
+---
+title: "casual inference"
+author: "Zihao Wang"
+date: "2017-5-20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Cases where there is no effect (  $\bar Yk =  \bar Y0$ for all k = 1,......,9)
+In this case,transcendentally, I choose all the mean value 0 and all the variance 1,that is:$$\bar Y_{k}=0,\sigma_{k}=1$$The total number of the unit n is 10000 and the total number of the arms K is 10. For convinience I divide the population units evenly into 10 groups,that is $n_{K}=1000$ for all k=0,......,9.
+With the knowledge of central limit theorem, I have $$\bar Y_{k} ^{obs}\sim N(\bar Y_{k},\sigma_{k}\sqrt\frac{K}{n}) , s_{k}^2\sim \frac{\sigma_{k}^2\chi^2_{\frac{n}{K}-1}}{\frac{n}{K}-1}$$. With the number I set above,I use the random numbers which satisfy the distribution above to compute the corresponding p-value and to obtain the distributino of the $p_{combine}$.
+
+```{r 1}
+N=10000
+K=10
+n=as.numeric()
+for (i in 1:10){n[i]=N/10}
+Ybar=as.numeric()
+for (i in 1:10){Ybar[i]=0}
+sigma=as.numeric()
+for (i in 1:10){sigma[i]=1}
+```
+I decide to do simulation 10000 times. Since the null hypothesis is to test whether there exist obvious treatment effect,that is$$H_{0}:\bar Y_{k}-\bar Y_{0}=0,for k=0,...,9$$, thus,we construct the statistic $\theta_{k}$ using the following formula$$\theta_{k}=\frac{\bar Y_{k} ^{obs}-\bar Y_{0} ^{obs}}{\sqrt{\frac{s_{k}^2}{n_{k}}+\frac{s_{0}^2}{n_{0}}}}$$  
+```{r}
+Ybar.obs<-matrix(nrow = 10,ncol = 10000)
+variance.obs<-matrix(nrow = 10,ncol = 10000)
+for (i in 1:10){
+for (j in 1:10000){
+  Ybar.obs[i,j]=rnorm(1,Ybar[i],sigma[i]*sqrt(K/N))
+  variance.obs[i,j]=rchisq(1,n[i]-1)*(sigma[i]^2)/(n[i]-1)
+}
+}
+```
+```{r}
+Vneyman<-matrix(nrow = 9,ncol = 10000)
+for(i in 1:9){
+  for(j in 1:10000) {
+    Vneyman[i,j]<-variance.obs[i+1,j]/n[i]+variance.obs[1,j]/n[1]
+  }
+}
+theta<-matrix(nrow = 9,ncol = 10000)
+for(i in 1:9){
+  for(j in 1:10000) {
+    theta[i,j]<-(Ybar.obs[i+1,j]-Ybar.obs[1,j])/sqrt(Vneyman[i,j])
+  }
+}
+```
+```{r}
+pvalue<-matrix(nrow = 9,ncol = 10000)
+for(i in 1:9){
+  for(j in 1:10000){
+    pvalue[i,j]=1-integrate(dnorm,-1*abs(theta[i,j]),abs(theta[i,j]))$value
+  }
+}
+pcombine<-as.numeric()
+for(j in 1:10000){pcombine[j]=min(pvalue[,j])}
+```
+```{r}
+pvalue.1<-matrix(nrow = 9,ncol = 10000)
+for(i in 1:9){
+  for(j in 1:10000){
+    pvalue.1[i,j]=2*pnorm(-abs(theta[i,j]))
+    }
+}
+pcombine.1<-as.numeric()
+for(j in 1:10000){pcombine.1[j]=min(pvalue.1[,j])}
+
+
+```
+```{r}
+hist(pvalue.1[5,])
+pcombince.order=sort(pcombine)
+cutoff1<-pcombince.order[500]
+
+
+```
+
+
+
+```{r}
+hist(pcombine,main = "The distribution of combined P-value")
+```
+From above, I find that the closer the combined p-value is to zero, the higher frequency density it has and then the frequency tail off as combined p-value increases. Since p-value is the possibility of null hypothesis holds, the simulation does not offer us sufficient evidence to reject the null hypothesis that there is no casual effect among various treatment.
+
+
+#Cases where the variance is different in different treatment arms.
+Here, I choose the variance from 1 to 10 transcendentally to simulate the different-variance case.The times of simulation is 10000 as well.
+```{r}
+N=10000
+K=10
+nk=as.numeric()
+for (i in 1:10){nk[i]=N/10}
+Ybar=as.numeric()
+for (i in 1:10){Ybar[i]=0}
+sigma=as.numeric()
+for (i in 1:10){sigma[i]=i}
+```
+
+
+
+```{r}
+simulation<-function(N,K,n,Ybar,sigma,M){
+
+Ybar.sim<-matrix(nrow = K,ncol = M)
+variance.sim<-matrix(nrow = K,ncol = M)
+for (i in 1:K){
+for (j in 1:M){
+  Ybar.sim[i,j]=rnorm(1,Ybar[i],sigma[i]*sqrt(K/N))
+  variance.sim[i,j]=rchisq(1,n[i]-1)*(sigma[i]^2)/(n[i]-1)
+}
+}
+
+Vneyman.sim<-matrix(nrow = (K-1),ncol = M)
+for(i in 1:(K-1)){
+  for(j in 1:M) {
+    Vneyman.sim[i,j]<-variance.sim[i+1,j]/n[i]+variance.sim[1,j]/n[1]
+  }
+}
+
+theta.sim<-matrix(nrow = (K-1),ncol = M)
+for(i in 1:(K-1)){
+  for(j in 1:M) {
+    theta.sim[i,j]<-(Ybar.sim[i+1,j]-Ybar.sim[1,j])/sqrt(Vneyman.sim[i,j])
+  }
+}
+
+pvalue.sim<-matrix(nrow = (K-1),ncol = M)
+for(i in 1:(K-1)){
+  for(j in 1:M){
+    pvalue.sim[i,j]=2*pnorm(-abs(theta.sim[i,j]))
+  }
+}
+
+pcombine.sim<-as.numeric()
+for(j in 1:M) {pcombine.sim[j]=min(pvalue.sim[,j])}
+
+hist(pvalue.sim[5,])
+pcombine.sim
+
+}
+```
+
+```{r}
+result=simulation(10000,10,rep(1000,10),rep(0,10),seq(1,10,1),10000)
+cutoff2<-sort(result)[500]
+hist(result)
+```
+From above I find that the distribution figure I get is similar with the one I obtain in case I,the frequency density centers at the neighborhood of zero and tail off as combined p-value increases. The only difference is that the figure I got has a heavier tail this time. It can be explained by the increasing value of variance in this case:noting that the variance I set in this case is bigger than the one I set in the previous case, thus, the observation of $\bar Y_{k}$ loses precision and so does the combined p-value. However, since the p-value centers around zero, there is no obvious evidence to reject the null hypothesis that there exist no treatment effect in this case.
+
+
+
+#Various combinations of size of $\tau_{k}$ and size of $\sigma_{k}$.
+Here I try two differenr cases: one is increasing $\bar Y_{k}$ with constant variance and the other one is increasing $\bar Y_{k}$ with increasing variance.
+
+```{r}
+result1=simulation(10000,10,rep(1000,10),seq(0,0.09,0.01),rep(10,10),10000)
+hist(result1)
+abline(v=cutoff1,col="red")
+```
+
+
+```{r}
+result2=simulation(10000,10,rep(1000,10),seq(0,0.09,0.01),seq(1,10,1),10000)
+hist(result2,breaks = seq(0,0.7,0.001))
+abline(v=cutoff2,col="red")
+```
+
+
+
+Q1.how to make decision with cutoff?
+Q2.the pvalue of the second but the last one does not follow uniform distribution when variance is small,say 1 or 2. However, it is under uniform distribution when variance is big?
+
