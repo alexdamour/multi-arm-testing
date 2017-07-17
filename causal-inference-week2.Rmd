@@ -1,0 +1,87 @@
+---
+title: "The study of power"
+author: "Zihao Wang"
+date: "2017-5-27"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The power of a binary hypothesis test is the probability that the test correctly rejects the null hypothesis (H0) when the alternative hypothesis (H1) is true. It can be equivalently thought of as the probability of accepting the alternative hypothesis (H1) when it is true—that is, the ability of a test to detect an effect, if the effect actually exists. 
+
+That is,$power=P(rejectH_{0}|H_{1}is true)$. As the power increases, there are decreasing chances of a Type II error (false negative), which are also referred to as the false negative rate ($\beta$) since the power is equal to $1−\beta$, again, under the alternative hypothesis.
+
+In this case, the null hypothesis and the alternative hypothesis are as follow:
+$$H_{0}:\tau_{k}=0,for k=0,...,9$$
+$$H_{A}:\tau_{9}=\epsilon,\tau_{k}=0,for k=0,...,8$$
+
+Therefore, in this case the power has the following formula:
+$power=P_{H_{A}}(P_{combine}<Null(\alpha))
+$.Since now we assume the alternative hypothesis is true, I generate data under this hypothesis.
+```{r}
+simulation<-function(N,K,n,Ybar,sigma,M){
+
+Ybar.sim<-matrix(nrow = K,ncol = M)
+variance.sim<-matrix(nrow = K,ncol = M)
+for (i in 1:K){
+for (j in 1:M){
+  Ybar.sim[i,j]=rnorm(1,Ybar[i],sigma[i]*sqrt(K/N))
+  variance.sim[i,j]=rchisq(1,n[i]-1)*(sigma[i]^2)/(n[i]-1)
+}
+}
+
+Vneyman.sim<-matrix(nrow = (K-1),ncol = M)
+for(i in 1:(K-1)){
+  for(j in 1:M) {
+    Vneyman.sim[i,j]<-variance.sim[i+1,j]/n[i]+variance.sim[1,j]/n[1]
+  }
+}
+
+theta.sim<-matrix(nrow = (K-1),ncol = M)
+for(i in 1:(K-1)){
+  for(j in 1:M) {
+    theta.sim[i,j]<-(Ybar.sim[i+1,j]-Ybar.sim[1,j])/sqrt(Vneyman.sim[i,j])
+  }
+}
+
+pvalue.sim<-matrix(nrow = (K-1),ncol = M)
+for(i in 1:(K-1)){
+  for(j in 1:M){
+    pvalue.sim[i,j]=2*pnorm(-abs(theta.sim[i,j]))
+  }
+}
+
+pcombine.sim<-as.numeric()
+for(j in 1:M) {pcombine.sim[j]=min(pvalue.sim[,j])}
+
+hist(pvalue.sim[5,])
+pcombine.sim
+
+}
+```
+
+```{r}
+basecase=simulation(10000,10,rep(1000,10),rep(0,10),rep(1,10),10000)
+hist(basecase)
+cutoff=sort(basecase)[500]
+```
+
+```{r}
+epsilon<-seq(0,1,0.01)
+prob<-as.numeric()
+for(i in 1:100){
+  pcombine<-simulation(10000,10,rep(1000,10),c(rep(0,9),epsilon[i]),rep(1,10),10000)
+  prob[i]<-length(which(pcombine<cutoff))/length(pcombine)
+
+}
+
+```
+```{r}
+plot(epsilon[1:100],prob)
+
+```
+
+
+
