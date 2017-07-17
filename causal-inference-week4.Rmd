@@ -1,0 +1,418 @@
+---
+title: "casual-inference week 4"
+author: "Zihao Wang"
+date: "2017-6-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+simulation<-function(N,K,n,Ybar,sigma,M){
+  
+Ybar.sim<-matrix(nrow = K,ncol = M)
+variance.sim<-matrix(nrow = K,ncol = M)
+for (i in 1:K){
+for (j in 1:M){
+  Ybar.sim[i,j]=rnorm(1,Ybar[i],sigma[i]*sqrt(K/N))
+  variance.sim[i,j]=rchisq(1,n[i]-1)*(sigma[i]^2)/(n[i]-1)
+}
+}
+
+Vneyman.sim<-matrix(nrow = (K-1),ncol = M)
+for(i in 1:(K-1)){
+  for(j in 1:M) {
+    Vneyman.sim[i,j]<-variance.sim[i+1,j]/n[i]+variance.sim[1,j]/n[1]
+  }
+}
+
+theta.sim<-matrix(nrow = (K-1),ncol = M)
+for(i in 1:(K-1)){
+  for(j in 1:M) {
+    theta.sim[i,j]<-(Ybar.sim[i+1,j]-Ybar.sim[1,j])/sqrt(Vneyman.sim[i,j])
+  }
+}
+
+pvalue.sim<-matrix(nrow = (K-1),ncol = M)
+for(i in 1:(K-1)){
+  for(j in 1:M){
+    pvalue.sim[i,j]=2*pnorm(-abs(theta.sim[i,j]))
+  }
+}
+
+pcombine.sim<-as.numeric()
+for(j in 1:M) {pcombine.sim[j]=min(pvalue.sim[,j])}
+
+pcombine.sim
+
+}
+```
+
+```{r}
+simulation.mean<-function(N,K,n,Ybar,sigma,M){
+  
+Ybar.sim<-matrix(nrow = K,ncol = M)
+variance.sim<-matrix(nrow = K,ncol = M)
+for (i in 1:K){
+for (j in 1:M){
+  Ybar.sim[i,j]=rnorm(1,Ybar[i],sigma[i]*sqrt(K/N))
+  variance.sim[i,j]=rchisq(1,n[i]-1)*(sigma[i]^2)/(n[i]-1)
+}
+}
+
+Vneyman.sim<-matrix(nrow = (K-1),ncol = M)
+for(i in 1:(K-1)){
+  for(j in 1:M) {
+    Vneyman.sim[i,j]<-variance.sim[i+1,j]/n[i]+variance.sim[1,j]/n[1]
+  }
+}
+
+theta.sim<-matrix(nrow = (K-1),ncol = M)
+for(i in 1:(K-1)){
+  for(j in 1:M) {
+    theta.sim[i,j]<-(Ybar.sim[i+1,j]-Ybar.sim[1,j])/sqrt(Vneyman.sim[i,j])
+  }
+}
+
+pvalue.sim<-matrix(nrow = (K-1),ncol = M)
+for(i in 1:(K-1)){
+  for(j in 1:M){
+    pvalue.sim[i,j]=2*pnorm(-abs(theta.sim[i,j]))
+  }
+}
+
+pcombine.sim<-as.numeric()
+for(j in 1:M) {pcombine.sim[j]=mean(pvalue.sim[,j])}
+
+pcombine.sim
+
+}
+```
+
+```{r}
+simulation.median<-function(N,K,n,Ybar,sigma,M){
+  
+Ybar.sim<-matrix(nrow = K,ncol = M)
+variance.sim<-matrix(nrow = K,ncol = M)
+for (i in 1:K){
+for (j in 1:M){
+  Ybar.sim[i,j]=rnorm(1,Ybar[i],sigma[i]*sqrt(K/N))
+  variance.sim[i,j]=rchisq(1,n[i]-1)*(sigma[i]^2)/(n[i]-1)
+}
+}
+
+Vneyman.sim<-matrix(nrow = (K-1),ncol = M)
+for(i in 1:(K-1)){
+  for(j in 1:M) {
+    Vneyman.sim[i,j]<-variance.sim[i+1,j]/n[i]+variance.sim[1,j]/n[1]
+  }
+}
+
+theta.sim<-matrix(nrow = (K-1),ncol = M)
+for(i in 1:(K-1)){
+  for(j in 1:M) {
+    theta.sim[i,j]<-(Ybar.sim[i+1,j]-Ybar.sim[1,j])/sqrt(Vneyman.sim[i,j])
+  }
+}
+
+pvalue.sim<-matrix(nrow = (K-1),ncol = M)
+for(i in 1:(K-1)){
+  for(j in 1:M){
+    pvalue.sim[i,j]=2*pnorm(-abs(theta.sim[i,j]))
+  }
+}
+
+pcombine.sim<-as.numeric()
+for(j in 1:M) {pcombine.sim[j]=median(pvalue.sim[,j])}
+
+pcombine.sim
+
+}
+```
+
+First,I define three different simulation functions which calculate pcombine according to min,median and mean.
+
+```{r}
+statistics_power<-function(N,K,n,Ybar,sigma,M,epsilon){
+  cutoff<-sort(simulation(N,K,n,rep(0,K),rep(1,K),M))[0.05*M]
+  prob<-as.numeric()
+  for(i in 1:length(epsilon)){
+    pcombine<-simulation(N,K,n,c(Ybar[1:(length(Ybar)-1)],epsilon[i]),sigma,M)
+    prob[i]<-length(which(pcombine<cutoff))/length(pcombine)
+  }
+  plot(epsilon/sqrt(sigma[1]^2+sigma[length(K)]^2),prob)
+  
+}
+#statistics power function with scaled statistics as variable on x-axis.
+```
+```{r}
+statistics_power.1<-function(N,K,n,Ybar,sigma,M,epsilon){
+  cutoff<-sort(simulation(N,K,n,rep(0,K),rep(1,K),M))[0.05*M]
+  prob<-as.numeric()
+  for(i in 1:length(epsilon)){
+    pcombine<-simulation(N,K,n,c(Ybar[1:(length(Ybar)-1)],epsilon[i]),sigma,M)
+    prob[i]<-length(which(pcombine<cutoff))/length(pcombine)
+  }
+  plot(epsilon,prob)
+  
+}
+#statistics power function with unchanged epsilon as variable on x-axis.
+```
+```{r}
+statistics_power.2<-function(N,K,n,Ybar,sigma,M,epsilon){
+  prob<-as.numeric()
+  for(i in 1:length(epsilon)){
+    cutoff<-sort(simulation(N,K,n,rep(0,K),epsilon[i]*sigma/epsilon[1],M))[0.05*M]
+    pcombine<-simulation(N,K,n,c(Ybar[1:(length(Ybar)-1)],epsilon[i]),epsilon[i]*sigma/epsilon[1],M)
+    prob[i]<-length(which(pcombine<cutoff))/length(pcombine)
+  }
+  plot(epsilon,prob)
+}
+
+#statistics power function under the condition maintaining the ratio of $\frac{Y_{k}}{\sigma_{k}}$ and $\frac{\sigma_{k}}{\sigma_{i}}$ unchanged.
+```
+```{r}
+statistics_power.2(10000,10,rep(1000,10),rep(0,10),rep(1,10),10000,seq(0.01,1,0.01))
+```
+```{r}
+for(k in seq(2,100,2)){
+  statistics_power.2(10000,10,rep(1000,10),rep(0,10),rep(1,10)/k,10000,seq(0.01,1,0.01))
+}
+
+```
+
+
+
+To keep the ration to a constant, I find that there is no obvious trend in the statistics power given a fixed ratio. Furthermore, when the ratio becomes larger and larger, despite of the paucity of a general trend, the center of the statistics power increases and eventually up to 1.
+
+
+
+
+```{r}
+K<-seq(5,20,1)
+epsilon<-seq(0.01,1,0.01)
+result.mean<-as.numeric()
+for(i in 1:16){
+  f<-function(x){
+  pcombine.mean<-simulation.mean(10000,K[i],rep(floor(10000/K[i]),K[i]),c(rep(0,(K[i]-1)),x),rep(1,K[i]),10000)
+  cutoff.mean<-sort(simulation.mean(10000,K[i],rep(floor(10000/K[i]),K[i]),c(rep(0,(K[i]-1)),0),rep(1,K[i]),10000))[500]
+  (length(which(pcombine.mean<cutoff.mean))/length(pcombine.mean))-0.08
+  }
+  
+  
+  
+  fzero<-function(f,a,b,eps=1e-5){
+    if(f(a)*f(b)>0) print("finding root is fail!")
+    else{
+      repeat
+        {if(abs(b-a)<eps)
+          break
+          x<-(a+b)/2
+          if(f(a)*f(x)<0) 
+            b<-x 
+          else 
+            a<-x
+          }
+    #list(root=(a+b)/2,fun=f(x))
+      }
+    x
+  }
+  
+  result.mean[i]<-fzero(f,0,1,1e-6)
+ 
+}
+```
+
+```{r}
+k=seq(2,20,1)
+a=c(seq(0.05,1,0.05),seq(5,100,5))
+p<-as.numeric()
+for(i in 1:19){
+  pcombine.mean1<-simulation.mean(10000,k[i],rep(floor(10000/k[i]),k[i]),c(rep(0,(k[i]-1)),0),rep(1,k[i]),10000)
+  cutoff.mean<-sort(pcombine.mean1)[500]
+  for(j in 1:40){
+    pcombine.mean2<-simulation.mean(10000,k[i],rep(floor(10000/k[i]),k[i]),c(rep(0,(k[i]-1)),a[j]),rep(1,k[i]),10000)
+    p[j]<-length(which(pcombine.mean2<cutoff.mean))/length(pcombine.mean2)
+  }
+  plot(a,p)
+}
+
+```
+
+
+
+
+```{r}
+k=seq(2,10,1)
+a=c(seq(0.05,1,0.05),seq(5,100,5))
+p<-as.numeric()
+for(i in 1:9){
+  pcombine.median1<-simulation.median(10000,k[i],rep(floor(10000/k[i]),k[i]),c(rep(0,(k[i]-1)),0),rep(1,k[i]),10000)
+  cutoff.median<-sort(pcombine.median1)[500]
+  for(j in 1:40){
+    pcombine.median2<-simulation.median(10000,k[i],rep(floor(10000/k[i]),k[i]),c(rep(0,(k[i]-1)),a[j]),rep(1,k[i]),10000)
+    p[j]<-length(which(pcombine.median2<cutoff.median))/length(pcombine.median2)
+  }
+  plot(a,p)
+}
+
+```
+Since when the number of the arms,K, greater than 2,the statistics power of pcombine.median and pcombine.mean is far less than 1 even if the vaue of $Y_{k}$ is very large,therefore, it is difficult for me to reject the null hythesis in these cases with alternative hypothesis in hand. I only consider K=2 in the following analysis.
+```{r}
+k=2
+epsilon=seq(0.01,1,0.01)
+p.min<-as.numeric()
+p.mean<-as.numeric()
+p.median<-as.numeric()
+pcombine.min1<-simulation(10000,k,rep(floor(10000/k),k),c(rep(0,(k-1)),0),rep(1,k),10000)
+pcombine.median1<-simulation.median(10000,k,rep(floor(10000/k),k),c(rep(0,(k-1)),0),rep(1,k),10000)
+pcombine.mean1<-simulation.mean(10000,k,rep(floor(10000/k),k),c(rep(0,(k-1)),0),rep(1,k),10000)
+cutoff.min<-sort(pcombine.min1)[500]
+cutoff.median<-sort(pcombine.median1)[500]
+cutoff.mean<-sort(pcombine.mean1)[500]
+
+for(j in 1:100){
+  pcombine.min2<-simulation(10000,k,rep(floor(10000/k),k),c(rep(0,(k-1)),epsilon[j]),rep(1,k),10000)
+  pcombine.median2<-simulation.median(10000,k,rep(floor(10000/k),k),c(rep(0,(k-1)),epsilon[j]),rep(1,k),10000)
+   pcombine.mean2<-simulation.median(10000,k,rep(floor(10000/k),k),c(rep(0,(k-1)),epsilon[j]),rep(1,k),10000)
+   
+   p.min[j]<-length(which(pcombine.min2<cutoff.min))/length(pcombine.min2)
+   p.median[j]<-length(which(pcombine.median2<cutoff.median))/length(pcombine.median2)
+   p.mean[j]<-length(which(pcombine.mean2<cutoff.mean))/length(pcombine.mean2)
+  
+}
+
+```
+
+```{r}
+plot(epsilon,p.min)
+plot(epsilon,p.median)
+plot(epsilon,p.mean)
+
+```
+
+#REVISED: using binary search method to find corresponding epsilon which make the statistics power around 0.8 given a specific number of the arms.
+
+
+```{r}
+K<-seq(5,30,1)
+epsilon<-seq(0.01,1,0.01)
+result.min<-as.numeric()
+for(i in 1:26){
+  f<-function(x){
+  pcombine.min<-simulation(10000,K[i],rep(floor(10000/K[i]),K[i]),c(rep(0,(K[i]-1)),x),rep(1,K[i]),10000)
+  cutoff.min<-sort(simulation(10000,K[i],rep(floor(10000/K[i]),K[i]),c(rep(0,(K[i]-1)),0),rep(1,K[i]),10000))[500]
+  (length(which(pcombine.min<cutoff.min))/length(pcombine.min))-0.8
+  }
+  
+  fzero<-function(f,a,b,eps=1e-6){
+    if(f(a)*f(b)>0) print("finding root is fail!")
+    else{
+      
+      repeat
+        {if(abs(b-a)<eps)
+          break
+          x<-(a+b)/2
+          print(x)
+          if(f(a)*f(x)<0) 
+            b<-x 
+          else 
+            a<-x
+        }
+      
+      }
+    (a+b)/2
+  }
+  
+  result.min[i]<-fzero(f,0,1,1e-6)
+  
+
+  
+}
+```
+```{r}
+plot(seq(5,30,1),result.min)
+plot(sqrt(seq(5,30,1)),result.min)
+plot(log(seq(5,30,1)),result.min)
+
+```
+
+
+I find that except for some outliers, square root transformation behaves better than log transformation or none-transform case.
+
+```{r}
+K<-seq(5,20,1)
+result.median<-as.numeric()
+for(i in 1:16){
+  
+  f<-function(x){
+  pcombine.median<-simulation.median(10000,K[i],rep(floor(10000/K[i]),K[i]),c(rep(0,(K[i]-1)),x),rep(1,K[i]),10000)
+  cutoff.median<-sort(simulation.median(10000,K[i],rep(floor(10000/K[i]),K[i]),c(rep(0,(K[i]-1)),0),rep(1,K[i]),10000))[500]
+  (length(which(pcombine.median<cutoff.median))/length(pcombine.median))-0.08
+  }
+  
+  fzero<-function(f,a,b,eps=1e-6){
+    if(f(a)*f(b)>0) print("finding root is fail!")
+    else{
+      repeat
+        {if(abs(b-a)<eps)
+          break
+          x<-(a+b)/2
+          print(x)
+          if(f(a)*f(x)<0) 
+            b<-x 
+          else 
+            a<-x
+          }
+    #list(root=(a+b)/2,fun=f(x))
+      }
+    (a+b)/2
+  }
+  
+  a=fzero(f,0,1,1e-6)
+  
+  result.median[i]<-a
+ 
+}
+```
+```{r}
+plot(K,result.median)
+```
+
+```{r}
+K<-seq(5,20,1)
+epsilon<-seq(0.01,1,0.01)
+result.mean<-as.numeric()
+for(i in 1:16){
+  f<-function(x){
+  pcombine.mean<-simulation.mean(10000,K[i],rep(floor(10000/K[i]),K[i]),c(rep(0,(K[i]-1)),x),rep(1,K[i]),10000)
+  cutoff.mean<-sort(simulation.mean(10000,K[i],rep(floor(10000/K[i]),K[i]),c(rep(0,(K[i]-1)),0),rep(1,K[i]),10000))[500]
+  (length(which(pcombine.mean<cutoff.mean))/length(pcombine.mean))-0.8
+  }
+  
+  fzero<-function(f,a,b,eps=1e-5){
+    if(f(a)*f(b)>0) list(fail="finding root is fail!")
+    else{
+      repeat
+        {if(abs(b-a)<eps)
+          break
+          x<-(a+b)/2
+          print(x)
+          if(f(a)*f(x)<0) 
+            b<-x 
+          else 
+            a<-x
+          }
+    #list(root=(a+b)/2,fun=f(x))
+      }
+    x
+  }
+  
+  result.mean[i]<-fzero(f,0,1,1e-6)
+ 
+}
+```
+
+

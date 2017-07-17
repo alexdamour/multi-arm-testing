@@ -1,0 +1,165 @@
+---
+title: "week3-casual inference"
+author: "Zihao Wang"
+date: "2017å¹?6æœ?1æ—?"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+In this part,we focus on the topic the statistics power curve. However, the x-axis is no longer the $\bar Y_{i}$ but $\frac{\bar Y_{i}}{\sqrt{\sigma_{i}^2+\sigma_{0}^2}}$. Since if we scale the statistics, the nominator and denominator would cancel off, we are expected to get the identical plot of the statistics power as that in the week two.
+
+```{r}
+simulation<-function(N,K,n,Ybar,sigma,M){
+  
+Ybar.sim<-matrix(nrow = K,ncol = M)
+variance.sim<-matrix(nrow = K,ncol = M)
+for (i in 1:K){
+for (j in 1:M){
+  Ybar.sim[i,j]=rnorm(1,Ybar[i],sigma[i]*sqrt(K/N))
+  variance.sim[i,j]=rchisq(1,n[i]-1)*(sigma[i]^2)/(n[i]-1)
+}
+}
+
+Vneyman.sim<-matrix(nrow = (K-1),ncol = M)
+for(i in 1:(K-1)){
+  for(j in 1:M) {
+    Vneyman.sim[i,j]<-variance.sim[i+1,j]/n[i]+variance.sim[1,j]/n[1]
+  }
+}
+
+theta.sim<-matrix(nrow = (K-1),ncol = M)
+for(i in 1:(K-1)){
+  for(j in 1:M) {
+    theta.sim[i,j]<-(Ybar.sim[i+1,j]-Ybar.sim[1,j])/sqrt(Vneyman.sim[i,j])
+  }
+}
+
+pvalue.sim<-matrix(nrow = (K-1),ncol = M)
+for(i in 1:(K-1)){
+  for(j in 1:M){
+    pvalue.sim[i,j]=2*pnorm(-abs(theta.sim[i,j]))
+  }
+}
+
+pcombine.sim<-as.numeric()
+for(j in 1:M) {pcombine.sim[j]=min(pvalue.sim[,j])}
+
+pcombine.sim
+
+}
+```
+
+```{r}
+basecase=simulation(10000,10,rep(1000,10),rep(0,10),rep(1,10),10000)
+hist(basecase)
+cutoff=sort(basecase)[500]
+```
+```{r}
+statistics_power<-function(N,K,n,Ybar,sigma,M,epsilon){
+  cutoff<-sort(simulation(N,K,n,rep(0,K),rep(1,K),M))[0.05*M]
+  prob<-as.numeric()
+  for(i in 1:length(epsilon)){
+    pcombine<-simulation(N,K,n,c(Ybar[1:(length(Ybar)-1)],epsilon[i]),sigma,M)
+    prob[i]<-length(which(pcombine<cutoff))/length(pcombine)
+  }
+  plot(epsilon,prob/sqrt(sigma[1]^2+sigma[length(K)]^2))
+  
+}
+
+```
+
+Here, I define a function to plot $\frac{\bar Y_{i}}{\sqrt{\sigma_{i}^2+\sigma_{0}^2}}$ versus $\epsilon$, the result I have is the same with the plot of $\bar Y_{i}$ versus $\epsilon$, which proves the idea that the standardized statistics we obtain from dividing $\bar Y_{i}$ by the corresponding square root of the variance behaves as well as $\bar Y_{i}$
+
+```{r}
+statistics_power(10000,10,rep(1000,10),rep(0,10),rep(1,10),10000,seq(0,1,0.01))
+```
+```{r}
+statistics_power(10000,20,rep(500,20),rep(0,20),rep(1,20),10000,seq(0,1,0.01))
+statistics_power(10000,40,rep(250,40),rep(0,40),rep(1,40),10000,seq(0,1,0.01))
+```
+From the above, the increasing number of arms, that is K, does not affect the general tendency of the plot. However, the bigger K is, the slower the plot increases. It is natural that with more groups in hand, it is getting more and more difficult for us to reject the null hypothesis conditioning the alternative hypothesis is right. 
+```{r}
+K<-seq(5,20,1)
+epsilon<-seq(0.01,1,0.01)
+result<-as.numeric()
+for(i in 1:16){
+  cutoff<-sort(simulation(10000,K[i],rep(floor(10000/K[i]),K[i]),rep(0,K[i]),rep(1,K[i]),10000))[500]
+  #print(c(i, cutoff))
+  upper=1
+  lower=0
+  while(TRUE){
+    mean=(upper+lower)/2
+    pcombine<-simulation(10000,K[i],rep(floor(10000/K[i]),K[i]),c(rep(0,(K[i]-1)),mean),rep(1,K[i]),10000)
+    prob<-length(which(pcombine<cutoff))/length(pcombine)
+    #print(c(j, prob))
+    if(abs(prob-0.8)<1e-32){
+      result[i]<-mean
+      #print(c(i, j, result[i], epsilon[j]))
+      break
+    }
+    if(prob>0.8){
+      upper=mean
+    }
+    if(prob<0.8){
+      lower=mean
+    }
+   
+  }
+  
+}
+```
+```{r}
+plot(seq(5,20,1),result,xlab = "Number of the arms", ylab = "The corresponding epsilon value",main = "The relationship between K and epsilon")
+
+```
+Here, I want to study the relationship between the number of the arms, that is K, with $\epsilon$ where $\epsilon$ is the samllest one satisfying that the corresponding statistics power is over 0.8.
+
+```{r}
+#par(mfrow=c(1,3))
+plot(seq(5,20,1),result)
+plot(sqrt(seq(5,20,1)),result)
+plot(log(seq(5,20,1)),result)
+```
+```{r}
+K.1<-seq(2,50,1)
+epsilon<-seq(0.01,1,0.01)
+result.1<-as.numeric()
+for(i in 1:49){
+  cutoff<-sort(simulation(10000,K.1[i],rep(floor(10000/K.1[i]),K.1[i]),rep(0,K.1[i]),rep(1,K.1[i]),10000))[500]
+  #print(c(i, cutoff))
+  upper=1
+  lower=0
+  while(TRUE){
+    mean=(upper+lower)/2
+    pcombine<-simulation(10000,K.1[i],rep(floor(10000/K.1[i]),K.1[i]),c(rep(0,(K.1[i]-1)),mean),rep(1,K.1[i]),10000)
+    prob<-length(which(pcombine<cutoff))/length(pcombine)
+    #print(c(j, prob))
+    if(abs(prob-0.8)<1e-32){
+      result.1[i]<-mean
+      #print(c(i, j, result[i], epsilon[j]))
+      break
+    }
+    if(prob>0.8){
+      upper=mean
+    }
+    if(prob<0.8){
+      lower=mean
+    }
+   
+  }
+  
+}
+```
+```{r}
+plot(K.1,result.1,xlab = "Number of the arms", ylab = "The corresponding epsilon value",main = "The relationship between K and epsilon")
+```
+```{r}
+par(mfrow=c(1,3))
+plot(K.1,result.1)
+plot(sqrt(K.1),result.1)
+plot(log(K.1),result.1)
+```
+From above, I find that the corresponding $\epsilon$ increases as K increases and the linear relationship between $\epsilon$ and $\sqrt{K}$ is the most significant one.

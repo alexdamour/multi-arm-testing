@@ -1,0 +1,308 @@
+---
+title: "Untitled"
+author: "Zihao Wang"
+date: "2017å¹?6æœ?21æ—?"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+#Task 1:
+Explore the relationship between epsilon which satisfy that the corresponding power is over 0.8 and number of the arm,K. Study the relationship under minimum, mean and median.
+```{r}
+K<-seq(5,40,1)
+epsilon.min<-as.numeric()
+for(i in 1:36){
+  f<-function(x){
+    prob=0
+    for(j in 1:10){
+    y<-mvtnorm::rmvnorm(1,rep(0,(K[i]-1)),diag(K[i]-1))
+    ynorm<-y*x/sqrt(sum(y^2))
+    Ybar<-c(0,ynorm)
+    pcombine.min<-simulation(10000,K[i],rep(floor(10000/K[i]),K[i]),Ybar,rep(1,K[i]),10000)
+    cutoff.min<-sort(simulation(10000,K[i],rep(floor(10000/K[i]),K[i]),c(rep(0,(K[i]-1)),0),rep(1,K[i]),10000))[500]
+    prob=prob+length(which(pcombine.min<cutoff.min))/length(pcombine.min)
+    }
+    prob/10-0.8
+  }
+  
+   fzero<-function(f,a,b,eps=1e-6){
+     if(f(a)*f(b)>0)
+       print("finding root is fail!")
+     else{
+       repeat{
+         x<-(a+b)/2      
+         if(f(a)*f(x)<0) b<-x else a<-x
+         if(abs(b-a)<eps) break
+         }
+       list(root=(a+b)/2,fun=f(x))
+     }
+     (a+b)/2
+     }
+
+
+  
+  epsilon.min[i]<-fzero(f,0,1,1e-6)
+
+}
+```
+```{r}
+plot(seq(5,40,1),epsilon.min,col="red",type = "l",xlab = "Number of the arms",ylab = "80% epsilon",main = "The plot between the number of the arms versus epsilon")
+legend("bottomright","(x,y)", pch = 1,,title = "method=mean,fixed-module-hypothesis,using mean")
+lines(seq(5,23,1),epsilon.mean[1:19],col="green")
+lines(seq(5,32,1),epsilon.median[1:28],col="blue")
+```
+```{r}
+K<-seq(5,40,1)
+epsilon.mean<-as.numeric()
+for(i in 1:36){
+  f<-function(x){
+    prob=0
+    for(j in 1:10){
+    y<-mvtnorm::rmvnorm(1,rep(0,(K[i]-1)),diag(K[i]-1))
+    ynorm<-y*x/sqrt(sum(y^2))
+    Ybar<-c(0,ynorm)
+    pcombine.mean<-simulation.mean(10000,K[i],rep(floor(10000/K[i]),K[i]),Ybar,rep(1,K[i]),10000)
+    cutoff.mean<-sort(simulation.mean(10000,K[i],rep(floor(10000/K[i]),K[i]),c(rep(0,(K[i]-1)),0),rep(1,K[i]),10000))[500]
+    prob=prob+length(which(pcombine.mean<cutoff.mean))/length(pcombine.mean)
+    }
+    prob/10-0.8
+  }
+  
+  fzero<-function(f,a,b,eps=1e-6){
+     if(f(a)*f(b)>0)
+       print("finding root is fail!")
+     else{
+       repeat{
+         x<-(a+b)/2      
+         if(f(a)*f(x)<0) b<-x else a<-x
+         if(abs(b-a)<eps) break
+         }
+       list(root=(a+b)/2,fun=f(x))
+     }
+      print((a+b)/2)
+     (a+b)/2
+     }
+  
+  epsilon.mean[i]<-fzero(f,0,1,1e-6)
+
+}
+```
+
+```{r}
+plot(seq(5,23,1),epsilon.mean[1:19],xlab = "Number of the arms",ylab = "80% epsilon",main = "The plot between the number of the arms versus epsilon")
+legend("bottomright","(x,y)", pch = 1,,title = "method=mean,fixed-module-hypothesis,using mean")
+```
+
+```{r}
+K<-seq(5,40,1)
+epsilon.median<-as.numeric()
+for(i in 1:36){
+  f<-function(x){
+    prob=0
+    for(j in 1:10){
+    y<-mvtnorm::rmvnorm(1,rep(0,(K[i]-1)),diag(K[i]-1))
+    ynorm<-y*x/sqrt(sum(y^2))
+    Ybar<-c(0,ynorm)
+    pcombine.median<-simulation.median(10000,K[i],rep(floor(10000/K[i]),K[i]),Ybar,rep(1,K[i]),10000)
+    cutoff.median<-sort(simulation.median(10000,K[i],rep(floor(10000/K[i]),K[i]),c(rep(0,(K[i]-1)),0),rep(1,K[i]),10000))[500]
+    prob=prob+length(which(pcombine.median<cutoff.median))/length(pcombine.median
+                                                                  
+                                                                  )
+    }
+    prob/10-0.8
+  }
+  
+ fzero<-function(f,a,b,eps=1e-6){
+     if(f(a)*f(b)>0)
+       print("finding root is fail!")
+     else{
+       repeat{
+         x<-(a+b)/2      
+         if(f(a)*f(x)<0) b<-x else a<-x
+         if(abs(b-a)<eps) break
+         }
+       list(root=(a+b)/2,fun=f(x))
+     }
+     print((a+b)/2)
+     (a+b)/2
+     }
+  
+  epsilon.median[i]<-fzero(f,0,1,1e-6)
+
+}
+```
+
+```{r}
+
+plot(seq(5,32,1),epsilon.median[1:28],xlab = "Number of the arms",ylab = "80% epsilon",main = "The plot between the number of the arms versus epsilon")
+legend("bottomright","(x,y)", pch = 1,,title = "method=median,fixed-module-hypothesis,using mean")
+```
+```{r}
+plot(seq(5,40,1),epsilon.median)
+```
+
+```{r}
+K<-seq(5,40,1)
+result.median.2<-rep(0,36)
+epsilon<-seq(0.01,1,0.01)
+for(i in 1:36){
+  cutoff.median<-sort(simulation.median(10000,K[i],rep(floor(10000/K[i]),K[i]),c(rep(0,(K[i]-1)),0),rep(1,K[i]),10000))[500]
+  
+  
+  for(m in 1:3){
+    y<-mvtnorm::rmvnorm(1,rep(0,(K[i]-1)),diag(K[i]-1))
+    ynorm<-y/sqrt(sum(y^2))
+    Ybar<-c(0,ynorm)
+    
+    for(j in 1:100){
+      pcombine.median<-simulation.median(10000,K[i],rep(floor(10000/K[i]),K[i]),Ybar*epsilon[j],rep(1,K[i]),10000)
+      ratio<-length(which(pcombine.median<cutoff.median))/length(pcombine.median)
+      if(ratio>=0.8)
+        {result.median.2[i]<-epsilon[j]+result.median.2[i]
+        print(epsilon[j])
+        break}
+    }
+  }
+  result.median.2[i]=result.median.2/10
+}
+
+
+K<-seq(5,40,1)
+result.min.2<-rep(0,36)
+epsilon<-seq(0.01,1,0.01)
+for(i in 1:36){
+  cutoff.min<-sort(simulation(10000,K[i],rep(floor(10000/K[i]),K[i]),c(rep(0,(K[i]-1)),0),rep(1,K[i]),10000))[500]
+  
+  
+  for(m in 1:3){
+    y<-mvtnorm::rmvnorm(1,rep(0,(K[i]-1)),diag(K[i]-1))
+    ynorm<-y/sqrt(sum(y^2))
+    Ybar<-c(0,ynorm)
+    
+    for(j in 1:100){
+      pcombine.min<-simulation(10000,K[i],rep(floor(10000/K[i]),K[i]),Ybar*epsilon[j],rep(1,K[i]),10000)
+      ratio<-length(which(pcombine.min<cutoff.mmin))/length(pcombine.min)
+      if(ratio>=0.8)
+        {result.min.2[i]<-epsilon[j]+result.min.2[i]
+        print(epsilon[j])
+        break}
+    }
+  }
+  result.min.2[i]=result.min.2/10
+}
+
+
+
+K<-seq(5,40,1)
+result.mean.2<-rep(0,36)
+epsilon<-seq(0.01,1,0.01)
+for(i in 1:36){
+  cutoff.mean<-sort(simulation.mean(10000,K[i],rep(floor(10000/K[i]),K[i]),c(rep(0,(K[i]-1)),0),rep(1,K[i]),10000))[500]
+  
+  
+  for(m in 1:3){
+    y<-mvtnorm::rmvnorm(1,rep(0,(K[i]-1)),diag(K[i]-1))
+    ynorm<-y/sqrt(sum(y^2))
+    Ybar<-c(0,ynorm)
+    
+    for(j in 1:100){
+      pcombine.mean<-simulation.mean(10000,K[i],rep(floor(10000/K[i]),K[i]),Ybar*epsilon[j],rep(1,K[i]),10000)
+      ratio<-length(which(pcombine.mean<cutoff.mean))/length(pcombine.mean)
+      if(ratio>=0.8)
+        {result.mean.2[i]<-epsilon[j]+result.mean.2[i]
+        print(epsilon[j])
+        break}
+    }
+  }
+  result.mean.2[i]=result.mean.2/10
+}
+```
+
+```{r}
+plot(seq(5,40,1),result.min,type = "l",col="red")
+lines(seq(5,37,1),result.median,col="blue")
+lines(seq(5,30,1),result.mean,col="green")
+
+```
+
+
+
+
+
+#Task 2:
+Study the relationship between max$\vec Y$ and the modulus of the vector.
+using minimum to construct the combined p-value.
+
+```{r}
+#fix the epsilon to 1 in this case
+ymax.1<-rep(0,45)
+K<-seq(6,50,1)
+for(i in 1:45){
+  for(j in 1:1000){
+    y<-mvtnorm::rmvnorm(1,rep(0,(K[i]-1)),diag(K[i]-1))
+    ynorm<-y/sqrt(sum(y^2))
+    a=max(ynorm)
+    ymax.1[i]=ymax.1[i]+a
+  }
+  ymax.1[i]=ymax.1[i]/10
+}
+
+```
+```{r}
+plot(seq(6,50,1),1/sqrt(seq(6,50,1)),xlab = "number of the arms,K",ylab = "epsilon/srqt(K)",type = "l",col="red")
+legend("bottomleft","(x,y)", pch = 1,,title = "epsilon=1,using as comparison basis")
+plot(seq(6,50,1),ymax.1,xlab = "number of the arms,K",ylab ="largest deviation",type = "l",col="red")
+legend("bottomleft","(x,y)", pch = 1,,title = "epsilon=1,using average of 1000 times to remove randomness ")
+plot(1/sqrt(seq(6,50,1)),ymax.1,xlab = "epsilon/srqt(K)",ylab ="largest deviation",type = "l",col="red")
+legend("bottomright","(x,y)", pch = 1,title = "epsilon=1,using average of 1000 times to remove randomness ")
+```
+```{r}
+#fix the epsilon to 0.1 in this case
+ymax.2<-rep(0,45)
+K<-seq(6,50,1)
+for(i in 1:45){
+  for(j in 1:1000){
+    y<-mvtnorm::rmvnorm(1,rep(0,(K[i]-1)),diag(K[i]-1))
+    ynorm<-y*0.1/sqrt(sum(y^2))
+    a=max(ynorm)
+    ymax.2[i]=ymax.2[i]+a
+  }
+  ymax.2[i]=ymax.2[i]/10
+}
+```
+```{r}
+
+
+plot(seq(6,50,1),0.1/sqrt(seq(6,50,1)),xlab = "number of the arms,K",ylab = "epsilon/srqt(K)",type = "l",col="red")
+legend("bottomleft","(x,y)", pch = 1,,title = "epsilon=0.1,using as comparison basis")
+plot(seq(6,50,1),ymax.2,xlab = "number of the arms,K",ylab ="largest deviation",type = "l",col="red")
+legend("bottomleft","(x,y)", pch = 1,,title = "epsilon=0.1,using average of 1000 times to remove randomness ")
+plot(0.1/sqrt(seq(6,50,1)),ymax.2,xlab = "epsilon/srqt(K)",ylab ="largest deviation",type = "l",col="red")
+legend("bottomright","(x,y)", pch = 1,title = "epsilon=0.1,using average of 1000 times to remove randomness ")
+```
+
+```{r}
+#fix the epsilon to 10 in this case
+ymax.3<-rep(0,45)
+K<-seq(6,50,1)
+for(i in 1:45){
+  for(j in 1:1000){
+    y<-mvtnorm::rmvnorm(1,rep(0,(K[i]-1)),diag(K[i]-1))
+    ynorm<-y*10/sqrt(sum(y^2))
+    a=max(ynorm)
+    ymax.3[i]=ymax.3[i]+a
+  }
+  ymax.3[i]=ymax.3[i]/10
+}
+
+```
+```{r}
+plot(seq(6,50,1),10/sqrt(seq(6,50,1)),xlab = "number of the arms,K",ylab = "epsilon/srqt(K)",type = "l",col="red")
+legend("bottomleft","(x,y)", pch = 1,,title = "epsilon=10,using as comparison basis")
+plot(seq(6,50,1),ymax.3,xlab = "number of the arms,K",ylab ="largest deviation",type = "l",col="red")
+legend("bottomleft","(x,y)", pch = 1,,title = "epsilon=10,using average of 1000 times to remove randomness ")
+plot(10/sqrt(seq(6,50,1)),ymax.3,xlab = "epsilon/srqt(K)",ylab ="largest deviation",type = "l",col="red")
+legend("bottomright","(x,y)", pch = 1,title = "epsilon=10,using average of 1000 times to remove randomness ")
+```
